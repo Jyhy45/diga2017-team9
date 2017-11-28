@@ -1,0 +1,39 @@
+form {
+  	font-family: sans-serif;
+	text-align: center;
+	font-size: 1.25em;
+}
+
+.contactLabel {
+  	font-family: sans-serif;
+	font-size: 1.15em;
+	font-weight: 600;
+}
+
+.contactInput {
+  	font-family: sans-serif;
+	text-align: left;
+	font-size: 1em;
+	width: 300px;
+}
+
+.contactTextarea {
+  	font-family: sans-serif;
+	text-align: left;
+	font-size: 1em;
+	width: 298px;
+	height: 100px;
+}
+
+input[type="submit"] {
+	background: #222;
+	color: white;
+	border-style: none;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+  	font-family: sans-serif;
+	font-size: 1em;
+	text-shadow:none;
+	font-weight: 600;
+}
