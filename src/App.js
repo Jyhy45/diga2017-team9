@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state ={
-      selectedTab: "Landing Page"
+      selectedTab: "Landing_Page"
 
     }
     this.tabSelected = this.tabSelected.bind(this);
@@ -56,5 +56,7 @@ class App extends Component {
     );
   }
 }
+
+
 
 export default App;
