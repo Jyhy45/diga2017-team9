@@ -16,8 +16,8 @@ buttonClicked(itemName){
     render() {
         return (
             <div className="btn-group" role="group">
-                <button type="button" className={(this.props.selectedTab === "Landing Page")? "btn btn-lg btn-primary" :"btn btn-lg"}
-                onClick={()=>this.buttonClicked("Landing Page")}>
+                <button type="button" className={(this.props.selectedTab === "Landing_Page")? "btn btn-lg btn-primary" :"btn btn-lg"}
+                onClick={()=>this.buttonClicked("Landing_Page")}>
                 Landing Page</button>
                 <button type="button" className={(this.props.selectedTab === "APP")? "btn btn-lg btn-primary" :"btn btn-lg"}
                 onClick={()=>this.buttonClicked("APP")}>
