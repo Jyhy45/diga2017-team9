@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Menu from './components/OverHeadMenu'
+import ScenarioSelector from './components/ScenarioSelector'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +30,9 @@ class App extends Component {
         
       case "APP":
         content = (
-          <div>THIS IS APP PAGE</div>
+          <div>
+            <ScenarioSelector/>
+          </div>
         )
       break;
       case "Contact":
