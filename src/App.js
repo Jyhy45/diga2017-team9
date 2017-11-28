@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-<<<<<<< HEAD
 import ContactForm from './components/ContactForm'
-=======
->>>>>>> 00e8932a3057ad664bbc07e81e8eddf89fe139ae
 import Menu from './components/OverHeadMenu'
 
 class App extends Component {
