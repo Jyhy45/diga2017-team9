@@ -21,8 +21,8 @@ class ContactForm extends Component {
 	changeHandler(e) {
 		e.persist();
 		let store = this.state;
-		store.form[e.target.name]=e.target.value;
-		store.message = "mailto:ronanlobyrne@gmail.com?subject="+store.form.subject+"&body="+store.form.email+"%20"+store.form.body;
+		store.form[e.target.name] = e.target.value;
+		store.message = "mailto:ronanlobyrne@gmail.com?subject=" + store.form.subject + "&body=" + store.form.email + "%20" + store.form.body;
 		this.setState(store);
 	}
 
@@ -30,13 +30,13 @@ class ContactForm extends Component {
 		e.preventDefault();
 		//console.log(this.state.form);
 		fetch('/messages/', {
-			method:'POST',
-			headers:{ 'Content-Type': 'application/json' },
-			body:JSON.stringify(this.state.form)
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(this.state.form)
 		})
-		.catch((error) => {
-			console.error(error);
-		});
+			.catch((error) => {
+				console.error(error);
+			});
 	}
 
 	render() {
@@ -72,7 +72,7 @@ class ContactForm extends Component {
 							</tr >
 							<tr>
 								<td colSpan="2">
-									<input className="contactSubmit" type="submit" value="Submit"/>
+									<input className="contactSubmit" type="submit" value="Submit" />
 								</td >
 							</tr >
 						</tbody>
