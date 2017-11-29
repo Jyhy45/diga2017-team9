@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import ContactForm from './components/ContactForm'
+import AppNavigation from './components/AppNavigation'
 import Menu from './components/OverHeadMenu'
 
 class App extends Component {
