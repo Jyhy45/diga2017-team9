@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import ContactForm from './components/ContactForm'
 import Menu from './components/OverHeadMenu'
@@ -34,7 +34,7 @@ class App extends Component {
       break;
       case "Contact":
       content = (
-		<div><ContactForm /></div>
+		<div className="App-content"><ContactForm /></div>
       )
     break;
       default:
