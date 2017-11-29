@@ -1,86 +1,53 @@
-
-import React, { Component } from 'react'
-import './ContactForm.css';
-
-class ContactForm extends Component {
-
-	constructor() {
-		super();
-		this.state = {
-			form: {
-				email: '',
-				subject: '',
-				body: '',
-			},
-			message: '',
-		};
-		this.changeHandler = this.changeHandler.bind(this);
-		this.submitHandler = this.submitHandler.bind(this);
-	}
-
-	changeHandler(e) {
-		e.persist();
-		let store = this.state;
-		store.form[e.target.name]=e.target.value;
-		store.message = "mailto:ronanlobyrne@gmail.com?subject="+store.form.subject+"&body="+store.form.email+"%20"+store.form.body;
-		this.setState(store);
-	}
-
-	submitHandler(e) {
-		e.preventDefault();
-		//console.log(this.state.form);
-		fetch('/messages/', {
-			method:'POST',
-			headers:{ 'Content-Type': 'application/json' },
-			body:JSON.stringify(this.state.form)
-		})
-		.catch((error) => {
-			console.error(error);
+var DonationBox = React.createClass({
+	getInitialState: function () {
+		//this will hold all the data being read and posted to the file
+		return { data: [] };
+	},
+	loadDonationsFromServer: function () {
+		$.ajax({
+			url: this.props.url,
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				this.setState({ data: data });
+			}.bind(this),
+			error: function (xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
 		});
-	}
-
-	render() {
-		const { form, message } = this.state;
+	},
+	componentDidMount: function () {
+		this.loadDonationsFromServer();
+		setInterval(this.loadDonationsFromServer, this.props.pollInterval);
+	},
+	handleDonationSubmit: function (donation) {
+		//this is just an example of how you would submit a form
+		//you would have to implement something separately on the server
+		$.ajax({
+			url: this.props.url,
+			dataType: 'json',
+			type: 'POST',
+			data: donation,
+			success: function (data) {
+				this.setState({ data: data });
+			}.bind(this),
+			error: function (xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+	render: function () {
 		return (
-			<div>
-				<form onSubmit={this.submitHandler} href={message}>
-					<table>
-						<tbody>
-							<tr>
-								<td>
-									<label htmlFor="email" className="contactLabel">Email</label>
-								</td>
-								<td>
-									<input className="contactInput" type="email" name="email" value={form.email} onChange={this.changeHandler} placeholder="Your Email Here" />
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label htmlFor="subject" className="contactLabel">Subject</label>
-								</td>
-								<td>
-									<input className="contactInput" type="text" name="subject" value={form.subject} onChange={this.changeHandler} placeholder="Message Subject Here" />
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label htmlFor="body" className="contactLabel">Message</label>
-								</td>
-								<td>
-									<textarea className="contactInput contactTextarea" cols="22" rows="4" name="body" value={form.body} onChange={this.changeHandler} placeholder="Your Message Here" ></textarea>
-								</td >
-							</tr >
-							<tr>
-								<td colSpan="2">
-									<input className="contactSubmit" type="submit" value="Submit"/>
-								</td >
-							</tr >
-						</tbody>
-					</table>
-				</form>
+			<div className="donationBox">
+				<h1>Donations</h1>
+				<DonationList data={this.state.data} />
+				<DonationForm onDonationSubmit={this.handleDonationSubmit} />
 			</div>
 		);
 	}
-}
+});
 
-export default ContactForm;
+ReactDOM.render(
+	<DonationBox url="/api/donations" pollInterval={2000} />,
+	document.getElementById('content')
+);
