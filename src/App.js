@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import ContactForm from './components/ContactForm'
 import Menu from './components/OverHeadMenu'
+import Graphs from './components/Graphs'
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class App extends Component {
         
       case "APP":
         content = (
-          <div>THIS IS APP PAGE</div>
+		  <div><Graphs /></div>
         )
       break;
       case "Contact":
