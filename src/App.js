@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'jquery'
-import logo from './logo.svg';
 import './App.css';
 import Menu from './components/OverHeadMenu'
 import ScenarioSelector from './components/ScenarioSelector'
@@ -16,9 +15,16 @@ class App extends Component {
 
     }
     this.tabSelected = this.tabSelected.bind(this);
+    this.saveSelectedRegionLevel = this.saveSelectedRegionLevel.bind(this);
+    this.saveSelectedRegion = this.saveSelectedRegion.bind(this);
   }
 
-
+  saveSelectedRegionLevel(regionLevelId){
+    this.setState({selectedRegionLevel:regionLevelId});
+  }
+  saveSelectedRegion(regionId){
+    this.setState({selectedRegion:regionId});
+  }
   tabSelected(tabName){
     this.setState({selectedTab: tabName});
   }
@@ -34,7 +40,12 @@ class App extends Component {
       case "APP":
         content = (
           <div>
-            <ScenarioSelector/>
+            <ScenarioSelector
+            selectedRegionLevel={this.state.selectedRegionLevel}
+            selectedRegion={this.state.selectedRegion}
+            saveSelectedRegionLevel={this.saveSelectedRegionLevel}
+            saveSelectedRegion={this.saveSelectedRegion}
+            />
           </div>
         )
       break;

@@ -27,7 +27,9 @@ class ScenarioSelector extends Component {
             <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <div className="row">
                     <RegionLevelSelector
-                    regions={this.state.regions}/>
+                    regions={this.state.regions}
+                    selectedRegionLevel={this.props.selectedRegionLevel}
+                    saveSelectedRegionLevel={this.props.saveSelectedRegionLevel}/>
                 </div>
             </div>
             
