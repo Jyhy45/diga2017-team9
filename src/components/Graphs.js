@@ -45,7 +45,14 @@ class Graphs extends Component {
 
 		const config = {
 			chart: {
-				polar: true
+				polar: true,
+				/*
+				type: 'column',
+				height: 500,
+				width: 850,
+				marginTop: 80,
+				spacingLeft: 20,
+				*/
 			},
 
 			title: {
@@ -60,7 +67,7 @@ class Graphs extends Component {
 			xAxis: {
 				tickInterval: (360 / processedTodoTypes.length),
 				min: 0,
-				max: 360 - 360 / processedTodoTypes.length,
+				max: 360,// - (360 / processedTodoTypes.length),
 				labels: {
 					formatter: function () {
 						return this.value/10;
@@ -70,6 +77,7 @@ class Graphs extends Component {
 
 			yAxis: {
 				min: 0,
+				max: 1
 			},
 
 			plotOptions: {
@@ -89,16 +97,15 @@ class Graphs extends Component {
 				colorByPoint: true,
 				data: processedTodoTypes,
 				pointPlacement: 'between'
-			}, {
+			}/*, {
 				type: 'line',
 				name: 'Line',
-				colorByPoint: true,
 				data: processedTodoTypes
 			}, {
 				type: 'area',
 				name: 'Area',
 				data: processedTodoTypes
-			}]
+			}*/]
 		};
 
 		return (
@@ -112,7 +119,7 @@ class Graphs extends Component {
 		if (this.state.showNewItemInputs)
 		{
 			return(
-				<div>{this.chart(13)/*JSON.stringify(this.state.items[0])*/}</div>
+				<div>{this.chart(15)/*JSON.stringify(this.state.items[0])*/}</div>
 			);
 		}
 		else{
