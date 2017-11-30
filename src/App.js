@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import 'jquery'
 import logo from './logo.svg';
 import './App.css';
 import Menu from './components/OverHeadMenu'
@@ -9,7 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state ={
-      selectedTab: "Landing_Page"
+      selectedTab: "Landing_Page",
+      selectedRegionLevel: null,
+      selectedRegion: null
 
     }
     this.tabSelected = this.tabSelected.bind(this);
