@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import DataGetter from '../data/getData';
 import RegionLevelSelector from './RegionLevelSelector'
 import RegionSelector from './RegionSelector'
 
 class ScenarioSelector extends Component {
-    constructor(props){
-        super(props);
-    }
-    
     
     render() {
         return (
