@@ -25,9 +25,6 @@ class RegionLevelSelector extends Component {
   handleSelect(eventKey,event){
     console.log(eventKey);
     this.props.saveSelectedRegionLevel(eventKey);
-    if (this.props.selectedRegionLevel!==eventKey) {
-      this.props.saveSelectedRegion(null);
-    }
   }
   
   render() {

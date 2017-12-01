@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RegionLevelSelector from './RegionLevelSelector'
 import RegionSelector from './RegionSelector'
+import ScenarioCollectionSelector from './ScenarioCollectionsSelector'
 
 class ScenarioSelector extends Component {
     
@@ -25,8 +26,14 @@ class ScenarioSelector extends Component {
                     saveRegions={this.props.saveRegions}
                     saveRegionLevels={this.props.saveRegionLevels}
                     regions={this.props.regions}
-                    regionLevel={this.props.regionLevel}
-                    />
+                    regionLevel={this.props.regionLevel}/>
+                    <ScenarioCollectionSelector
+                    selectedScenarioCollection={this.props.selectedScenarioCollection}
+                    selectedRegionLevel={this.props.selectedRegionLevel}
+                    selectedRegion={this.props.selectedRegion}
+                    regions={this.props.regions}
+                    saveSelectedScenarioCollection={this.props.saveSelectedScenarioCollection}/>
+                    
                 </div>
             </div>
             

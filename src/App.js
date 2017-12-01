@@ -13,7 +13,8 @@ class App extends Component {
       selectedRegionLevel: null,
       selectedRegion: null,
       regionLevel:null,
-      regions:null
+      regions:null,
+      selectedScenarioCollection:null
 
     }
     this.tabSelected = this.tabSelected.bind(this);
@@ -21,14 +22,20 @@ class App extends Component {
     this.saveSelectedRegion = this.saveSelectedRegion.bind(this);
     this.saveRegions = this.saveRegions.bind(this);
     this.saveRegionLevels = this.saveRegionLevels.bind(this);
+    this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
   
   }
-
+  saveSelectedScenarioCollection(collectioId){
+    this.setState({selectedScenarioCollection:collectioId}); 
+  }
   saveSelectedRegionLevel(regionLevelId){
-    this.setState({selectedRegionLevel:regionLevelId});
+    this.setState({selectedRegionLevel:regionLevelId,
+                  selectedRegion:null,
+                  selectedScenarioCollection: null});
   }
   saveSelectedRegion(regionId){
-    this.setState({selectedRegion:regionId});
+    this.setState({selectedRegion:regionId,
+                  selectedScenarioCollection: null});
   }
   tabSelected(tabName){
     this.setState({selectedTab: tabName});
@@ -65,6 +72,8 @@ class App extends Component {
             saveRegionLevels={this.saveRegionLevels}
             regions={this.state.regions}
             regionLevel={this.state.regionLevel}
+            selectedScenarioCollection={this.state.selectedScenarioCollection}
+            saveSelectedScenarioCollection={this.saveSelectedScenarioCollection}
             />
           </div>
         )
