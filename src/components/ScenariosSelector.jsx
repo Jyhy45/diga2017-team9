@@ -24,7 +24,7 @@ class ScenariosSelector extends Component {
               && this.props.scenarioCollection[0]!=null
               && this.props.scenarioCollection[0].scenarios!=null
               && this.props.scenarioCollection[0].scenarios.map(element => 
-              <ToggleButton value={element.id}>{element.name}</ToggleButton>
+              <ToggleButton key={element.id} value={element.id}>{element.name}</ToggleButton>
             )}
             </ToggleButtonGroup> 
         </div>

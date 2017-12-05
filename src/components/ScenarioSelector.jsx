@@ -4,6 +4,7 @@ import RegionLevelSelector from './RegionLevelSelector'
 import RegionSelector from './RegionSelector'
 import ScenarioCollectionSelector from './ScenarioCollectionsSelector'
 import ScenariosSelector from './ScenariosSelector'
+import TimePeriodSelector from './TimePeriodSelector'
 
 class ScenarioSelector extends Component {
     
@@ -38,6 +39,10 @@ class ScenarioSelector extends Component {
                     scenarioCollection={this.props.scenarioCollection}
                     setSelectedScenarios={this.props.setSelectedScenarios}
                     selectedScenarios={this.props.selectedScenarios}/>
+                    <TimePeriodSelector
+                    selectedTimePeriod={this.props.selectedTimePeriod}
+                    setSelectedTimePeriod={this.props.setSelectedTimePeriod}
+                    scenarioCollection={this.props.scenarioCollection}/>
                     
             </div>
             

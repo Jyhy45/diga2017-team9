@@ -17,7 +17,8 @@ class App extends Component {
       regions:null,
       selectedScenarioCollection:null,
       scenarioCollection:null,
-      selectedScenarios:[]
+      selectedScenarios:null,
+      selectedTimePeriod:[]
 
     }
     this.tabSelected = this.tabSelected.bind(this);
@@ -27,6 +28,7 @@ class App extends Component {
     this.saveRegionLevels = this.saveRegionLevels.bind(this);
     this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
+    this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
   
   }
 
@@ -49,6 +51,10 @@ class App extends Component {
 
   }
 
+  setSelectedTimePeriod(selectedTimePeriod){
+    this.setState({selectedTimePeriod});
+  }
+
   setSelectedScenarios(selectedScenariosArray){
     this.setState({
       selectedScenarios: selectedScenariosArray
@@ -56,7 +62,10 @@ class App extends Component {
   }
 
   saveSelectedScenarioCollection(collectioId){
-    this.setState({selectedScenarioCollection:collectioId}); 
+    this.setState({selectedScenarioCollection:collectioId,
+                  selectedTimePeriod:null,
+                  selectedScenarios:[]
+                }); 
   }
 
   saveSelectedRegionLevel(regionLevelId){
@@ -64,14 +73,18 @@ class App extends Component {
                   selectedRegion:null,
                   selectedScenarioCollection: null,
                   regions: null,
-                  scenarioCollection:null
+                  scenarioCollection:null,
+                  selectedTimePeriod:null,
+                  selectedScenarios:[]
                 });
   }
   
   saveSelectedRegion(regionId){
     this.setState({selectedRegion:regionId,
                   selectedScenarioCollection: null,
-                  scenarioCollection:null});
+                  scenarioCollection:null,
+                  selectedTimePeriod:null,
+                  selectedScenarios:[]});
   }
 
   tabSelected(tabName){
@@ -114,6 +127,8 @@ class App extends Component {
             scenarioCollection={this.state.scenarioCollection}
             setSelectedScenarios={this.setSelectedScenarios}
             selectedScenarios={this.state.selectedScenarios}
+            setSelectedTimePeriod={this.setSelectedTimePeriod}
+            selectedTimePeriod={this.state.selectedTimePeriod}
             />
           </div>
         )
