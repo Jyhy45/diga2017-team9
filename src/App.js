@@ -2,17 +2,24 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Menu from './components/OverHeadMenu'
+import IndicatorChooser from './components/IndicatorChooser'
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state ={
-      selectedTab: "Landing_Page"
-
+    
+    this.state = {
+      selectedTab: "Landing_Page",
+      selectedRegion: null,
     }
+
     this.tabSelected = this.tabSelected.bind(this);
+    this.indicatorSelected = this.indicatorSelected.bind(this);
   }
 
+  indicatorSelected(itemId) {
+    console.log("indicatorSelected()", itemId);
+  }
 
   tabSelected(tabName){
     this.setState({selectedTab: tabName});
@@ -28,7 +35,8 @@ class App extends Component {
         
       case "APP":
         content = (
-          <div>THIS IS APP PAGE</div>
+          <div><IndicatorChooser
+          indicatorSelected = { this.indicatorSelected }/></div>
         )
       break;
       case "Contact":
@@ -56,7 +64,4 @@ class App extends Component {
     );
   }
 }
-
-
-
 export default App;

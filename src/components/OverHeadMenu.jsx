@@ -25,8 +25,6 @@ buttonClicked(itemName){
                 <button type="button" className={(this.props.selectedTab === "Contact")? "btn btn-lg btn-primary" :"btn btn-lg"}
                 onClick={()=>this.buttonClicked("Contact")}>
                 Contact</button>
-                    
-                    
                                
             </div>
         );
