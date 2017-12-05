@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-//import jQuery from 'jquery/dist/jquery.slim'
-//import 'jquery/dist/jquery.slim'
-//import jquery from 'jquery/dist/jquery.slim'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-//global.jQuery = jQuery
-//global.jquery = jQuery // jquery lowercase  was the solution
-//global.$ = jQuery
-//let Bootstrap = require('bootstrap')
 
 
 class OverHeadMenu extends Component {

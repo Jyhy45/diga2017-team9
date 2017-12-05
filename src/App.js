@@ -36,6 +36,11 @@ class App extends Component {
   {
     //logic for fetching scenariocollection ... regionid and colletionid must be known
     if (nextState !== this.state){
+      if (nextState.selectedRegionLevel!==this.state.selectedRegionLevel) {
+        DataGetter.getRegionLevelById(nextState.selectedRegionLevel).then(result =>{
+          this.setState({regions: result});
+        })
+      }
       if (nextState.selectedScenarioCollection!=null) {
         if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection) {
           DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)

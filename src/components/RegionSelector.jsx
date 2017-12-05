@@ -14,15 +14,6 @@ handleSelect(eventKey,event){
   this.props.saveSelectedRegion(eventKey);
 }
 
-componentWillReceiveProps(nextProps){
-  if(nextProps.selectedRegionLevel!==this.props.selectedRegionLevel){
-    console.log("RegionSelector newProps");
-    DataGetter.getRegionLevelById(nextProps.selectedRegionLevel).then(result =>{
-      this.props.saveRegions(result);
-      console.log(result);
-    })
-  }
-}
   render() {
     
     return (
