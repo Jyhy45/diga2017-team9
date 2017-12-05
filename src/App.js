@@ -4,6 +4,7 @@ import './App.css';
 import Menu from './components/OverHeadMenu'
 import ScenarioSelector from './components/ScenarioSelector'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataGetter from './data/getData'
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +15,9 @@ class App extends Component {
       selectedRegion: null,
       regionLevel:null,
       regions:null,
-      selectedScenarioCollection:null
+      selectedScenarioCollection:null,
+      scenarioCollection:null,
+      selectedScenarios:[]
 
     }
     this.tabSelected = this.tabSelected.bind(this);
@@ -23,20 +26,54 @@ class App extends Component {
     this.saveRegions = this.saveRegions.bind(this);
     this.saveRegionLevels = this.saveRegionLevels.bind(this);
     this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
+    this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
   
   }
+
+  componentWillUpdate(nextProps, nextState)
+  {
+    //logic for fetching scenariocollection ... regionid and colletionid must be known
+    if (nextState !== this.state){
+      if (nextState.selectedScenarioCollection!=null) {
+        if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection) {
+          DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
+          .then(result => {
+            this.setState({scenarioCollection:result});
+          });
+        }
+      }
+    }
+  }
+
+  componentDidMount(){
+
+  }
+
+  setSelectedScenarios(selectedScenariosArray){
+    this.setState({
+      selectedScenarios: selectedScenariosArray
+    });
+  }
+
   saveSelectedScenarioCollection(collectioId){
     this.setState({selectedScenarioCollection:collectioId}); 
   }
+
   saveSelectedRegionLevel(regionLevelId){
     this.setState({selectedRegionLevel:regionLevelId,
                   selectedRegion:null,
-                  selectedScenarioCollection: null});
+                  selectedScenarioCollection: null,
+                  regions: null,
+                  scenarioCollection:null
+                });
   }
+  
   saveSelectedRegion(regionId){
     this.setState({selectedRegion:regionId,
-                  selectedScenarioCollection: null});
+                  selectedScenarioCollection: null,
+                  scenarioCollection:null});
   }
+
   tabSelected(tabName){
     this.setState({selectedTab: tabName});
   }
@@ -74,6 +111,9 @@ class App extends Component {
             regionLevel={this.state.regionLevel}
             selectedScenarioCollection={this.state.selectedScenarioCollection}
             saveSelectedScenarioCollection={this.saveSelectedScenarioCollection}
+            scenarioCollection={this.state.scenarioCollection}
+            setSelectedScenarios={this.setSelectedScenarios}
+            selectedScenarios={this.state.selectedScenarios}
             />
           </div>
         )

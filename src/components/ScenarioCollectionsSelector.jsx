@@ -24,8 +24,8 @@ class ScenarioCollectionsSelector  extends Component {
       <div className="row">
       <div> <b> Sceneario Collection</b></div>
       <DropdownButton bsSize="large"
-                      title="Region Level" 
-                      id="RegionLevelSelectorDropdown" 
+                      title="Sceneario Collection" 
+                      id="Sceneario Collection Selector Dropdown" 
                       onSelect={this.handleSelect}
                       disabled = {(this.props.regions!=null
                         &&this.props.regions[indexOfRegion]!=null 
