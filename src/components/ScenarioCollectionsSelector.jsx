@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {DropdownButton,MenuItem} from 'react-bootstrap'
+import {DropdownButton,MenuItem,ButtonGroup} from 'react-bootstrap'
 import DataGetter from '../data/getData'
 
 
@@ -22,7 +22,8 @@ class ScenarioCollectionsSelector  extends Component {
                         : null;
     return (
       <div className="row">
-      <div> <b> Sceneario Collection</b></div>
+      <div className="row"> <b> Sceneario Collection</b></div>
+      <ButtonGroup justified>
       <DropdownButton bsSize="large"
                       title="Sceneario Collection" 
                       id="Sceneario Collection Selector Dropdown" 
@@ -40,6 +41,7 @@ class ScenarioCollectionsSelector  extends Component {
                                 {element.name}</MenuItem>)}
       
       </DropdownButton>
+      </ButtonGroup>
       </div>
     );
   }

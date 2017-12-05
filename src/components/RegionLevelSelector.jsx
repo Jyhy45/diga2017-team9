@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {DropdownButton,MenuItem} from 'react-bootstrap'
+import {DropdownButton,MenuItem, ButtonGroup} from 'react-bootstrap'
 import DataGetter from '../data/getData'
 
 class RegionLevelSelector extends Component {
@@ -36,18 +36,21 @@ class RegionLevelSelector extends Component {
     return (
       <div className = "row">
       <div> <b> Region Level</b></div>
-        <DropdownButton bsSize="large"
-                        title="Region Level" 
-                        id="RegionLevelSelectorDropdown" 
-                        onSelect={this.handleSelect}
-                        disabled = {this.props.regionLevel!=null?false:true} >
-          {this.props.regionLevel!=null && this.props.regionLevel.map(element => <MenuItem
-                                  eventKey={element.id}
-                                  key={element.id}
-                                  active={element.id === this.props.selectedRegionLevel? true:false}>
-                                  {element.name}</MenuItem>)}
+        <ButtonGroup justified>
+          <DropdownButton bsSize="large"
+                          title="Region Level" 
+                          id="RegionLevelSelectorDropdown" 
+                          onSelect={this.handleSelect}
+                          disabled = {this.props.regionLevel!=null?false:true} >
+            {this.props.regionLevel!=null && this.props.regionLevel.map(element => <MenuItem
+                                    eventKey={element.id}
+                                    key={element.id}
+                                    active={element.id === this.props.selectedRegionLevel? true:false}>
+                                    {element.name}</MenuItem>)}
         
         </DropdownButton>
+        </ButtonGroup>
+        
       </div>
     );
   }

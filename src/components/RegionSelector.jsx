@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DataGetter from '../data/getData';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {DropdownButton,MenuItem} from 'react-bootstrap'
+import {DropdownButton,MenuItem,ButtonGroup} from 'react-bootstrap'
 
 class RegionSelector extends Component {
 constructor(props, context) {
@@ -26,8 +26,9 @@ componentWillReceiveProps(nextProps){
   render() {
     
     return (
-      <div>
-        <div> <b> Region </b></div>
+      <div className="row">
+        <div className="row"> <b> Region </b></div>
+        <ButtonGroup justified>
         <DropdownButton bsSize="large" 
                         title="Region" 
                         id="RegionSelectorDropdown" 
@@ -40,6 +41,7 @@ componentWillReceiveProps(nextProps){
           {element.name}</MenuItem>)}
         
         </DropdownButton>
+        </ButtonGroup>
       </div>
     );
   }
