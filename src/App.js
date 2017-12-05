@@ -48,7 +48,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-
+    DataGetter.getRegionLevels().then(result => {this.setState({regionLevel:result});})
   }
 
   setSelectedTimePeriod(selectedTimePeriod){
