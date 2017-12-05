@@ -48,9 +48,9 @@ class Indicators extends Component {
             
             <div className = { this.state.isSelected ? "row itemIsSelected" : "row" }
             onClick= {() => this.handleSelect(this.state.id)}>
-                
+
                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverHoverFocus}>
-                    <div className = 'col-md-12'>
+                    <div className = "row">
                         {this.state.name}
                     </div>
                 </OverlayTrigger>

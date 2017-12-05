@@ -43,7 +43,8 @@ class ItemsSelector extends Component {
             )}
         return (
             <div className = 'row' >
-            <div className = 'col-md-12'><br/><b>{this.state.name}</b></div><br/>
+            <br/>
+            <div className ="row" > <b>{this.state.name}</b></div>
                 {content}
             </div>
         )
