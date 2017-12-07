@@ -7,23 +7,6 @@ import dataGetter from '../data/getData'
 class IndicatorChooser extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            regionLevel: 24,
-            scenarioCollectionId: 5,
-            indicatorCategories: [],
-        };
-    }
-
-    componentDidMount() {
-        dataGetter.getScenarioCollectionById(this.state.regionLevel, this.state.scenarioCollectionId).then(
-            result => {
-                result.forEach(element => {
-                    this.setState({indicatorCategories: element.indicatorCategories})
-                    console.log(this.state.indicatorCategories);
-                });
-
-            });
     }
 
     render () {
@@ -33,11 +16,15 @@ class IndicatorChooser extends Component {
             <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                 <div className="row" >
                 <div> <b>Indicators</b></div>
-                {
-                    this.state.indicatorCategories.map(element =>  
-                        <ItemsSelector items = {element}
-                                        indicatorSelected = {this.props.indicatorSelected}
-                                        key = {element.id} />
+                {this.props.scenarioCollection!=null
+                    && this.props.scenarioCollection[0]!=null
+                    && this.props.scenarioCollection[0].indicatorCategories!=null
+                    && this.props.scenarioCollection[0].indicatorCategories.map(element =>  
+                        <ItemsSelector aSignleIndicatorCategory = {element}
+                                        setIndicatorsSelected = {this.props.setIndicatorsSelected}
+                                        key = {element.id}
+                                        id = {element.id}
+                                        ></ItemsSelector>
                     )
                 }
                 </div>

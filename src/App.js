@@ -20,9 +20,11 @@ class App extends Component {
       selectedScenarioCollection:null,
       scenarioCollection:null,
       selectedScenarios:null,
-      selectedTimePeriod:[]
+      selectedTimePeriod:null,
+      selectedIndicators:[]
 
     }
+
     this.tabSelected = this.tabSelected.bind(this);
     this.saveSelectedRegionLevel = this.saveSelectedRegionLevel.bind(this);
     this.saveSelectedRegion = this.saveSelectedRegion.bind(this);
@@ -31,10 +33,10 @@ class App extends Component {
     this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
-    this.indicatorSelected = this.indicatorSelected.bind(this);
+    this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
   }
 
-  indicatorSelected(itemId) {
+  setIndicatorsSelected(itemId) {
     console.log("indicatorSelected()", itemId);
   }
 
@@ -145,7 +147,9 @@ class App extends Component {
             </div>
             
             <IndicatorChooser
-          indicatorSelected = { this.indicatorSelected }/>
+          setIndicatorsSelected = { this.setIndicatorsSelected }
+          selectedIndicators={this.state.selectedIndicators}
+          scenarioCollection = {this.state.scenarioCollection}/>
           </div>
           
         )

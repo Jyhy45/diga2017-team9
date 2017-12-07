@@ -31,7 +31,7 @@ class Indicators extends Component {
 
     handleSelect(itemId) {
         this.setState({isSelected: !this.state.isSelected});
-        this.props.indicatorSelected(this.state.id);
+        this.props.setIndicatorsSelected(this.state.id);
         console.log(this.state);
     }
 

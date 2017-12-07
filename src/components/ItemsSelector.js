@@ -17,11 +17,11 @@ class ItemsSelector extends Component {
     }
 
     componentDidMount() {
-        this.setState({id: this.props.items.id, 
-            isMandatory: this.props.items.isMandatory, 
-            name: this.props.items.name, 
-            order: this.props.items.order,
-            indicators: this.props.items.indicators
+        this.setState({id: this.props.aSignleIndicatorCategory.id, 
+            isMandatory: this.props.aSignleIndicatorCategory.isMandatory, 
+            name: this.props.aSignleIndicatorCategory.name, 
+            order: this.props.aSignleIndicatorCategory.order,
+            indicators: this.props.aSignleIndicatorCategory.indicators
         });
     }
     
@@ -35,7 +35,7 @@ class ItemsSelector extends Component {
                 {
                     this.state.indicators.map(element =>  
                     <Indicators items = {element}
-                                    indicatorSelected = {this.props.indicatorSelected}
+                                    setIndicatorsSelected = {this.props.setIndicatorsSelected}
                                     key = {element.id} />
                     )
                 }
