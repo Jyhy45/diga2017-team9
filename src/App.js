@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import logo from './logo.svg';
 import './App.css';
 import ContactForm from './components/ContactForm'
 import Menu from './components/OverHeadMenu'
 import ScenarioSelector from './components/ScenarioSelector'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataGetter from './data/getData'
+import IndicatorChooser from './components/IndicatorChooser'
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +31,11 @@ class App extends Component {
     this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
-  
+    this.indicatorSelected = this.indicatorSelected.bind(this);
+  }
+
+  indicatorSelected(itemId) {
+    console.log("indicatorSelected()", itemId);
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -132,9 +138,16 @@ class App extends Component {
             setSelectedScenarios={this.setSelectedScenarios}
             selectedScenarios={this.state.selectedScenarios}
             setSelectedTimePeriod={this.setSelectedTimePeriod}
-            selectedTimePeriod={this.state.selectedTimePeriod}
-            />
+            selectedTimePeriod={this.state.selectedTimePeriod}/>
+            
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+              PlaceHolder
+            </div>
+            
+            <IndicatorChooser
+          indicatorSelected = { this.indicatorSelected }/>
           </div>
+          
         )
       break;
       case "Contact":
