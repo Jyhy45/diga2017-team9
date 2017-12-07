@@ -10,6 +10,8 @@ class Graphs extends Component {
 		this.state = {
 			view: "todos",
 			showNewItemInputs: false,
+			chartType: 'column',
+			polar: true,
 			items: []
 		};
 
@@ -24,35 +26,94 @@ class Graphs extends Component {
 		});
 	}
 
-	chart(id)
+	chart(scId, inId)
 	{
+		console.log(this.state.items[0]);
 		let processedTodoTypes = [];
-		let TodoTypes = this.state.items[0]
+		const TodoTypes = this.state.items[0];
 
 		TodoTypes.values.forEach(element => {
 			let todoIndex = processedTodoTypes.findIndex(todoType => todoType.name === element.value);
-			if (element.scenarioId === id) {
-				if (todoIndex === -1) {
-					processedTodoTypes.push(element.value)
+			inId.forEach(indicator => {
+				if (element.scenarioId === scId && element.indicatorId === indicator) {
+					if (todoIndex === -1) {
+						processedTodoTypes.push({id: indicator, data: element.value})
+						//let temp = [];
+						//temp[0] = processedTodoTypes[indicator];
+						//temp.push(element.value);
+						//processedTodoTypes[indicator] = element.value;
+					}
+					else {
+						processedTodoTypes[todoIndex].y++;
+					}
 				}
-				else {
-					processedTodoTypes[todoIndex].y++;
-				}
-			}
+
+			})
 		});
 
-		console.log(processedTodoTypes)
+		console.log(processedTodoTypes);
+
+		let dtArr = [];
+		let idArr = [];
+		for(let i=0; i<processedTodoTypes.length; i++)
+		{
+			//idArr[i] = processedTodoTypes[i].id;
+			for(let j=0; j<idArr.length; j++)
+			{
+				if (processedTodoTypes[j].id === idArr[i])
+				{
+					//dtArr[idArr[i]] = processedTodoTypes[j].data;
+				}
+			}
+			//console.log(processedTodoTypes[i].id + ": "+ processedTodoTypes[i].data);
+			//obj[i].push("" + processedTodoTypes[i].id + "", processedTodoTypes[i].data)
+			dtArr[i] = processedTodoTypes[i].data;
+			idArr[i] = processedTodoTypes[i].id
+		}//end for
+
+		for (let i = 0; i < idArr.length; i++)
+		{
+			for (let j = i; j < idArr.length; j++)
+			{
+				if(idArr[i] < idArr[j])
+				{
+					//Sort Id
+					let temp = idArr[j];
+					idArr[j] = idArr[i];
+					idArr[i] = temp;
+					//Sort Data
+					temp = dtArr[j];
+					dtArr[j] = dtArr[i];
+					dtArr[i] = temp;
+				}
+			}
+			console.log(idArr[i]+" : "+ dtArr[i]);
+		}
+
+		let final = [{}];
+		let tempId = 0;
+		for (let i=0; i<idArr.length; i++)
+		{
+			tempId = idArr[i];
+			final[idArr[i]] = [];
+			for (let j = 0; j < idArr.length; j++)
+			{
+				if(idArr[j] === tempId)
+				{
+					final[idArr[i]].push(dtArr[j])
+				}//end if
+			}
+		}
+		console.log(final);
 
 		const config = {
 			chart: {
-				polar: true,
-				/*
-				type: 'column',
+				polar: this.state.polar,
+				type: this.state.type,
 				height: 500,
 				width: 850,
 				marginTop: 80,
 				spacingLeft: 20,
-				*/
 			},
 
 			title: {
@@ -65,19 +126,19 @@ class Graphs extends Component {
 			},
 
 			xAxis: {
-				tickInterval: (360 / processedTodoTypes.length),
+				tickInterval: 360 / processedTodoTypes.length,
 				min: 0,
-				max: 360,// - (360 / processedTodoTypes.length),
+				max: 360,
 				labels: {
 					formatter: function () {
-						return this.value/10;
+						//return this.value;
 					}
 				}
 			},
 
 			yAxis: {
 				min: 0,
-				max: 1
+				//max: 1
 			},
 
 			plotOptions: {
@@ -92,10 +153,10 @@ class Graphs extends Component {
 			},
 
 			series: [{
-				type: 'column',
-				name: 'Column',
+				type: this.state.chartType,
+				name: this.state.chartType,
 				colorByPoint: true,
-				data: processedTodoTypes,
+				data: dtArr,
 				pointPlacement: 'between'
 			}/*, {
 				type: 'line',
@@ -108,18 +169,32 @@ class Graphs extends Component {
 			}*/]
 		};
 
+		//console.log(config);
+
 		return (
 			<div>
-				<ReactHighcharts config={config}></ReactHighcharts>
+				<ReactHighcharts config={config} />
 			</div>
 		)
+	}
+
+	changeState(event, polar, type)
+	{
+		this.setState({polar: polar, chartType: type})
 	}
 
 	render() {
 		if (this.state.showNewItemInputs)
 		{
-			return(
-				<div>{this.chart(15)/*JSON.stringify(this.state.items[0])*/}</div>
+			return (
+				<div>
+					<div>{this.chart(11, [131, 123, 134, 122])/* JSON.stringify(this.state.items[0]) */}</div >
+					<div>
+						<button onClick={(e) => this.changeState(e, true, 'column')} value="Polar">Polar</button>
+						<button onClick={(e) => this.changeState(e, false, 'column')} value="Column">Column</button>
+						<button onClick={(e) => this.changeState(e, false, 'pie')} value="Pie">Pie</button>
+					</div>
+				</div>
 			);
 		}
 		else{
