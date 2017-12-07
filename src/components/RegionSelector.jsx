@@ -15,13 +15,19 @@ handleSelect(eventKey,event){
 }
 
   render() {
-    
+    let title;
+    if(!this.props.selectedRegion){
+      title = "Region Level";
+    }else{
+      const index = this.props.regions.findIndex(element=>element.id===this.props.selectedRegion);
+      title = this.props.regions[index].name;
+    }
     return (
       <div className="row">
         <div className="row"> <b> Region </b></div>
         <ButtonGroup justified>
         <DropdownButton bsSize="large" 
-                        title="Region" 
+                        title={title} 
                         id="RegionSelectorDropdown" 
                         onSelect={this.handleSelect}
                         disabled = {this.props.regions!=null?false:true} >

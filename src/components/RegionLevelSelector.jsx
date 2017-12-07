@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {DropdownButton,MenuItem, ButtonGroup} from 'react-bootstrap'
+import './RegionLevelSelector.css'
 
 class RegionLevelSelector extends Component {
   constructor(props){
@@ -22,13 +23,21 @@ class RegionLevelSelector extends Component {
   render() {
     //console.log("selectooooor");
     //console.log(this.props.regions);
-    
+    let title;
+    if(!this.props.selectedRegionLevel){
+      title = "Region Level";
+    }else{
+      const index = this.props.regionLevel.findIndex(element=>element.id===this.props.selectedRegionLevel);
+      title = this.props.regionLevel[index].name;
+    }
+
+
     return (
       <div className = "row">
       <div> <b> Region Level</b></div>
         <ButtonGroup justified>
           <DropdownButton bsSize="large"
-                          title="Region Level" 
+                          title={title}
                           id="RegionLevelSelectorDropdown" 
                           onSelect={this.handleSelect}
                           disabled = {this.props.regionLevel!=null?false:true} >

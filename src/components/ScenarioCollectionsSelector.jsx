@@ -20,12 +20,21 @@ class ScenarioCollectionsSelector  extends Component {
     const indexOfRegion = this.props.regions!=null ? 
                         this.props.regions.findIndex(element=>element.id===this.props.selectedRegion)
                         : null;
+    let title;
+
+    if(!this.props.selectedScenarioCollection){
+      title = "Region Level";
+    }else{
+      const index = this.props.regions[indexOfRegion].scenarioCollections.findIndex(element=>element.id===this.props.selectedScenarioCollection);
+      title = this.props.regions[indexOfRegion].scenarioCollections[index].name;
+    }
+    
     return (
       <div className="row">
       <div className="row"> <b> Sceneario Collection</b></div>
       <ButtonGroup justified>
       <DropdownButton bsSize="large"
-                      title="Sceneario Collection" 
+                      title={title} 
                       id="Sceneario Collection Selector Dropdown" 
                       onSelect={this.handleSelect}
                       disabled = {(this.props.regions!=null
