@@ -91,17 +91,34 @@ class Graphs extends Component {
 		}
 
 		let final = [{}];
-		let tempId = 0;
+		let tempI = 0;
 		for (let i=0; i<idArr.length; i++)
 		{
-			tempId = idArr[i];
-			final[idArr[i]] = [];
+			let temp = {}
+			temp.name = idArr[i];
+			temp.data = [];
+			temp.type= this.state.chartType;
 			for (let j = 0; j < idArr.length; j++)
 			{
-				if(idArr[j] === tempId)
+				if (idArr[j] === temp.name)
 				{
-					final[idArr[i]].push(dtArr[j])
+					temp.data.push(dtArr[j]);
 				}//end if
+			}
+
+			let bool = false;
+			for(let j=0; j<final.length; j++)
+			{
+				if (final[j].name === temp.name)
+				{
+					bool = true;
+				}
+			}
+			if(!bool)
+			{
+				final[tempI] = [];
+				final[tempI] = temp;
+				tempI++;
 			}
 		}
 		console.log(final);
@@ -126,7 +143,7 @@ class Graphs extends Component {
 			},
 
 			xAxis: {
-				tickInterval: 360 / processedTodoTypes.length,
+				tickInterval: 360 / final.length,
 				min: 0,
 				max: 360,
 				labels: {
@@ -140,25 +157,35 @@ class Graphs extends Component {
 				min: 0,
 				//max: 1
 			},
+			
+			tooltip: {
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+				'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+				footerFormat: '</table>',
+				shared: true,
+				useHTML: true
+			},
 
 			plotOptions: {
 				series: {
 					pointStart: 0,
-					pointInterval: 360 / processedTodoTypes.length
+					pointInterval: 360 / final.length
 				},
 				column: {
-					pointPadding: 0,
-					groupPadding: 0
+					pointPadding: 0.2,
+					borderWidth: 0,
+					//groupPadding: 0
 				}
 			},
 
-			series: [{
+			series: final/*[{
 				type: this.state.chartType,
 				name: this.state.chartType,
 				colorByPoint: true,
-				data: dtArr,
+				data: final,
 				pointPlacement: 'between'
-			}/*, {
+			}, {
 				type: 'line',
 				name: 'Line',
 				data: processedTodoTypes
@@ -166,7 +193,7 @@ class Graphs extends Component {
 				type: 'area',
 				name: 'Area',
 				data: processedTodoTypes
-			}*/]
+			}]*/
 		};
 
 		//console.log(config);
