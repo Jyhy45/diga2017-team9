@@ -24,7 +24,7 @@ class RegionLevelSelector extends Component {
     //console.log("selectooooor");
     //console.log(this.props.regions);
     let title;
-    if(!this.props.selectedRegionLevel){
+    if(this.props.selectedRegionLevel==null){
       title = "Region Level";
     }else{
       const index = this.props.regionLevel.findIndex(element=>element.id===this.props.selectedRegionLevel);

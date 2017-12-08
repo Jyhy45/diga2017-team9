@@ -16,7 +16,7 @@ handleSelect(eventKey,event){
 
   render() {
     let title;
-    if(!this.props.selectedRegion){
+    if(this.props.selectedRegion==null){
       title = "Region Level";
     }else{
       const index = this.props.regions.findIndex(element=>element.id===this.props.selectedRegion);

@@ -22,7 +22,7 @@ class ScenarioCollectionsSelector  extends Component {
                         : null;
     let title;
 
-    if(!this.props.selectedScenarioCollection){
+    if(this.props.selectedScenarioCollection==null){
       title = "Region Level";
     }else{
       const index = this.props.regions[indexOfRegion].scenarioCollections.findIndex(element=>element.id===this.props.selectedScenarioCollection);
