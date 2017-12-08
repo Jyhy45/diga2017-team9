@@ -29,7 +29,8 @@ class App extends Component {
     this.saveSelectedScenarioCollection = this.saveSelectedScenarioCollection.bind(this);
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
-  
+
+    
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -84,18 +85,52 @@ class App extends Component {
                 });
   }
   
-  checkAndSetDefaultValuesRegionLevel(){}
-
-  checkAndSetDefaultValuesRegion(){}
-
-  checkAndSetDefaultValuesScenarioCollection(){}
 
   saveSelectedRegion(regionId){
+    /*
     this.setState({selectedRegion:regionId,
                   selectedScenarioCollection: null,
                   scenarioCollection:null,
                   selectedTimePeriod:null,
                   selectedScenarios:[]});
+  */
+    this.setState((state, props) => { 
+      let selectedScenarioCollection=null;
+      let scenarioCollection=null;
+      let selectedTimePeriod=null;
+      let selectedScenarios=[];
+      const indexOfRegion = state.regions.findIndex(element=>element.id===regionId);
+
+
+      /*
+      check if newly selected region contains same scenario collection
+      if yes then keep previous selections
+      if not set to defaults
+      */
+      selectedScenarioCollection = (state.regions[indexOfRegion].scenarioCollections
+        .find(element => element.id===state.selectedScenarioCollection)) != null
+        ?state.selectedScenarioCollection:null;
+
+      if (selectedScenarioCollection!=null) {
+        selectedTimePeriod=state.selectedTimePeriod;
+        selectedScenarios=state.selectedScenarios;
+        scenarioCollection=state.scenarioCollection;
+      } else {
+        //TODO: set to defaults
+      }
+
+
+
+      return {
+       selectedRegion: regionId,
+       selectedScenarioCollection,
+       scenarioCollection,
+       selectedTimePeriod,
+       selectedScenarios
+     
+      }});
+    
+                
   }
 
   tabSelected(tabName){
