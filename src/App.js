@@ -84,6 +84,12 @@ class App extends Component {
                 });
   }
   
+  checkAndSetDefaultValuesRegionLevel(){}
+
+  checkAndSetDefaultValuesRegion(){}
+
+  checkAndSetDefaultValuesScenarioCollection(){}
+
   saveSelectedRegion(regionId){
     this.setState({selectedRegion:regionId,
                   selectedScenarioCollection: null,
