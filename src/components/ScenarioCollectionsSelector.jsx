@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {DropdownButton,MenuItem,ButtonGroup} from 'react-bootstrap'
+import {DropdownButton,MenuItem,ButtonGroup,Tooltip,OverlayTrigger} from 'react-bootstrap'
 import DataGetter from '../data/getData'
 
 
@@ -47,7 +47,14 @@ class ScenarioCollectionsSelector  extends Component {
                                 eventKey={element.id}
                                 key={element.id}
                                 active={element.id === this.props.selectedScenarioCollection? true:false}>
-                                {element.name}</MenuItem>)}
+                                <OverlayTrigger overlay={<Tooltip
+                                  id="tooltip"><strong>{element.description}</strong></Tooltip>}
+                                  placement="right" >
+                                <span style={{display:'block'}}>
+                                {element.name}
+                                </span>
+                                </OverlayTrigger>
+                                </MenuItem>)}
       
       </DropdownButton>
       </ButtonGroup>

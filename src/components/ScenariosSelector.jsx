@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {ToggleButtonGroup,ToggleButton} from 'react-bootstrap'
+import {ToggleButtonGroup,ToggleButton,Tooltip,OverlayTrigger} from 'react-bootstrap'
 
 class ScenariosSelector extends Component {
 
@@ -24,7 +24,19 @@ class ScenariosSelector extends Component {
               && this.props.scenarioCollection[0]!=null
               && this.props.scenarioCollection[0].scenarios!=null
               && this.props.scenarioCollection[0].scenarios.map(element => 
-              <ToggleButton key={element.id} value={element.id}>{element.name}</ToggleButton>
+                
+                  
+                  <ToggleButton key={element.id} value={element.id}>
+                  <OverlayTrigger overlay={<Tooltip
+                    id="tooltip"><strong>{element.description}</strong></Tooltip>}
+                    placement="right" >
+                  <span style={{display:'block'}}>
+                  {element.name}
+                  </span>
+                  </OverlayTrigger>
+                  </ToggleButton>
+                  
+
             )}
             </ToggleButtonGroup> 
         </div>
