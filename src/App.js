@@ -152,13 +152,13 @@ class App extends Component {
     switch (this.state.selectedTab) {
       case "Landing_Page":
         content = (
-          <div>THIS IS LANDING PAGE</div>
+          <div className="App-content">THIS IS LANDING PAGE</div>
         )
         break;
         
       case "APP":
         content = (
-          <div>
+          <div className="App-content">
             <ScenarioSelector
             selectedRegionLevel={this.state.selectedRegionLevel}
             selectedRegion={this.state.selectedRegion}
