@@ -22,8 +22,7 @@ class App extends Component {
       selectedScenarios:null,
       selectedTimePeriod:null,
       selectedIndicatorCategories: [],
-      selectedIndicators: [],
-      newArray: []
+      selectedIndicators: []
     }
 
     this.tabSelected = this.tabSelected.bind(this);
@@ -97,33 +96,34 @@ class App extends Component {
                     let tempArrayForEverything = this.state.selectedIndicatorCategories;
                     let newArray = [];
                     let anotherNewArray = [];
-                    let tempArrayForIndicatorCategories = []
+                    
                     let anotherTempArrayForIndicatorCategories = [];
                     tempArrayForEverything.forEach(element => {
                       if( tempArrayForCategoryIds.includes(element.categoryId) ) {
                         newArray = [...newArray, element.categoryId];
-                        
-                      }
+                        let tempArrayForIndicatorCategories = {};
+                        tempArrayForIndicatorCategories.categoryId = element.categoryId;
+                      
+                      let thirdTempArray = [];
                       element.itemId.forEach(secondElement => {
+                        
                         if ( tempArrayForIndicators.includes(secondElement)) {
                           anotherNewArray = [...anotherNewArray, secondElement];
+                          thirdTempArray = [...thirdTempArray, secondElement];
                           
                         }
+                        tempArrayForIndicatorCategories.itemId = thirdTempArray;
+                        
                       });
-                      anotherTempArrayForIndicatorCategories = [...anotherTempArrayForIndicatorCategories, ...tempArrayForIndicatorCategories]
+                      anotherTempArrayForIndicatorCategories = [...anotherTempArrayForIndicatorCategories, tempArrayForIndicatorCategories];
+                      console.log(tempArrayForIndicatorCategories, anotherTempArrayForIndicatorCategories)
+                    }
                     });
                     // Below are the arrays with the wanted results.
-                    console.log("componentsChanged", newArray, anotherNewArray, anotherTempArrayForIndicatorCategories);
-                    this.setState({newArray: newArray, selectedIndicators: anotherNewArray});
+                    this.setState({selectedIndicatorCategories: anotherTempArrayForIndicatorCategories,
+                       selectedIndicators: anotherNewArray});
                   
-
-
-
-
             console.log(this.state.selectedIndicators)
-            /*this.setState({didScenariosChange: true,
-            selectedIndicatorCategories: [],
-          selectedIndicators: []});*/
           });
         }
       }
