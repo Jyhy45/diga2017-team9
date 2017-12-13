@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {ToggleButtonGroup,ToggleButton,Tooltip,OverlayTrigger} from 'react-bootstrap'
+import {ToggleButtonGroup,ToggleButton,Tooltip,OverlayTrigger,Popover} from 'react-bootstrap'
 
 class ScenariosSelector extends Component {
 
@@ -27,11 +27,13 @@ class ScenariosSelector extends Component {
                 
                   
                   <ToggleButton key={element.id} value={element.id}>
-                  <OverlayTrigger overlay={<Tooltip
-                    id="tooltip"><strong>{element.description}</strong></Tooltip>}
+                  <OverlayTrigger overlay={
+                    <Popover id="popover-info-plurp" title={element.name}>
+                    {element.description}
+                    </Popover>}
                     placement="right" >
                   <span style={{display:'block'}}>
-                  {element.name}
+                  {element.shortName}
                   </span>
                   </OverlayTrigger>
                   </ToggleButton>
