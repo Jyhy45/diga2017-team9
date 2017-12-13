@@ -43,7 +43,8 @@ class App extends Component {
         })
       }
       if (nextState.selectedScenarioCollection!=null) {
-        if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection) {
+        if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection
+            || this.state.selectedRegion!==nextState.selectedRegion) {
           DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
           .then(result => {
             this.setState({scenarioCollection:result});
