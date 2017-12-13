@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {ToggleButton, ToggleButtonGroup} from 'react-bootstrap'
+import {ToggleButton, ToggleButtonGroup, Tooltip, OverlayTrigger, Popover} from 'react-bootstrap'
 
 class ItemsSelector extends Component {
     constructor(props) {
@@ -46,7 +46,16 @@ class ItemsSelector extends Component {
               <ToggleButton
                 key = { element.id } 
                 value = { element.id }>
-                { element.name }
+                <OverlayTrigger overlay={
+                    <Popover id = {element.id} 
+                    title = { element.name }>
+                    { element.description }
+                    </Popover> }
+                    placement = "left" >
+                  <div>
+                  {element.name}
+                  </div>
+                  </OverlayTrigger>
               </ToggleButton>
             )}
             </ToggleButtonGroup> 
