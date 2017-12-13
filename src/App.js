@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import ContactForm from './components/ContactForm'
 import Menu from './components/OverHeadMenu'
-<<<<<<< HEAD
 import Graphs from './components/Graphs'
-=======
 import ScenarioSelector from './components/ScenarioSelector'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataGetter from './data/getData'
->>>>>>> 6b16471ed94c2f6712723b2dc097bd979412a59e
 
 class App extends Component {
   constructor(props) {
@@ -161,9 +158,6 @@ class App extends Component {
         
       case "APP":
         content = (
-<<<<<<< HEAD
-		  <div><Graphs /></div>
-=======
           <div>
             <ScenarioSelector
             selectedRegionLevel={this.state.selectedRegionLevel}
@@ -181,9 +175,9 @@ class App extends Component {
             selectedScenarios={this.state.selectedScenarios}
             setSelectedTimePeriod={this.setSelectedTimePeriod}
             selectedTimePeriod={this.state.selectedTimePeriod}
-            />
-          </div>
->>>>>>> 6b16471ed94c2f6712723b2dc097bd979412a59e
+		/>
+		<div><Graphs /></div>
+		</div>
         )
       break;
       case "Contact":
