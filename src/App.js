@@ -21,8 +21,9 @@ class App extends Component {
       scenarioCollection:null,
       selectedScenarios:null,
       selectedTimePeriod:null,
-      selectedIndicators:[]
-
+      selectedIndicatorCategories: [],
+      selectedIndicators: [],
+      newArray: []
     }
 
     this.tabSelected = this.tabSelected.bind(this);
@@ -36,8 +37,35 @@ class App extends Component {
     this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
   }
 
-  setIndicatorsSelected(itemId) {
-    console.log("indicatorSelected()", itemId);
+  setIndicatorsSelected(categoryId, itemId) {
+    /*
+      In this function we create a new array with an object with two values,
+      that we get when button is clicked (categoryId and an array with all enabled itemIds).
+      We check check if pre-existing array with these same objects has same categoryId as
+      our new array.
+      If so, then we filter these values out and merge these two arrays with the new values.
+      Then we go trough all values in the merged array and pick out the itemIds into another new array.
+    */
+    let newArray = {
+      categoryId,
+      itemId
+    }
+
+    let tempArray = this.state.selectedIndicatorCategories.filter(element => 
+      element.categoryId !== categoryId );
+
+    tempArray = [...tempArray, newArray];
+    
+    let newTempArray = [];
+    
+    tempArray.forEach(element => {
+      element.itemId.forEach(secondElement => {
+        newTempArray = [...newTempArray, secondElement];
+      });
+    });
+
+    this.setState({selectedIndicatorCategories: tempArray,
+                  selectedIndicators: newTempArray});  
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -54,6 +82,48 @@ class App extends Component {
           DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
           .then(result => {
             this.setState({scenarioCollection:result});
+              
+                    let tempArrayForCategoryIds = [];
+                    let tempArrayForIndicators = [];
+                    this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
+                      tempArrayForCategoryIds = [...tempArrayForCategoryIds, element.id];
+                      element.indicators.forEach(secondElement => {
+                        tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+                      });
+                    });
+              
+                    // Arrays of all possible ids tempArrayForCategoryIds, tempArrayForIndicators.
+              
+                    let tempArrayForEverything = this.state.selectedIndicatorCategories;
+                    let newArray = [];
+                    let anotherNewArray = [];
+                    let tempArrayForIndicatorCategories = []
+                    let anotherTempArrayForIndicatorCategories = [];
+                    tempArrayForEverything.forEach(element => {
+                      if( tempArrayForCategoryIds.includes(element.categoryId) ) {
+                        newArray = [...newArray, element.categoryId];
+                        
+                      }
+                      element.itemId.forEach(secondElement => {
+                        if ( tempArrayForIndicators.includes(secondElement)) {
+                          anotherNewArray = [...anotherNewArray, secondElement];
+                          
+                        }
+                      });
+                      anotherTempArrayForIndicatorCategories = [...anotherTempArrayForIndicatorCategories, ...tempArrayForIndicatorCategories]
+                    });
+                    // Below are the arrays with the wanted results.
+                    console.log("componentsChanged", newArray, anotherNewArray, anotherTempArrayForIndicatorCategories);
+                    this.setState({newArray: newArray, selectedIndicators: anotherNewArray});
+                  
+
+
+
+
+            console.log(this.state.selectedIndicators)
+            /*this.setState({didScenariosChange: true,
+            selectedIndicatorCategories: [],
+          selectedIndicators: []});*/
           });
         }
       }
@@ -78,7 +148,8 @@ class App extends Component {
     this.setState({selectedScenarioCollection:collectioId,
                   selectedTimePeriod:null,
                   selectedScenarios:[]
-                }); 
+                });
+                
   }
 
   saveSelectedRegionLevel(regionLevelId){
@@ -88,7 +159,9 @@ class App extends Component {
                   regions: null,
                   scenarioCollection:null,
                   selectedTimePeriod:null,
-                  selectedScenarios:[]
+                  selectedScenarios:[],
+                  selectedIndicators: [],
+                  selectedIndicatorCategories: []
                 });
   }
   
@@ -97,7 +170,10 @@ class App extends Component {
                   selectedScenarioCollection: null,
                   scenarioCollection:null,
                   selectedTimePeriod:null,
-                  selectedScenarios:[]});
+                  selectedScenarios:[],
+                  selectedIndicators: [],
+                  selectedIndicatorCategories: []
+                });
   }
 
   tabSelected(tabName){
@@ -148,8 +224,9 @@ class App extends Component {
             
             <IndicatorChooser
           setIndicatorsSelected = { this.setIndicatorsSelected }
-          selectedIndicators={this.state.selectedIndicators}
-          scenarioCollection = {this.state.scenarioCollection}/>
+          scenarioCollection = { this.state.scenarioCollection }
+          selectedIndicatorCategories = { this.selectedIndicatorCategories }
+          />
           </div>
           
         )

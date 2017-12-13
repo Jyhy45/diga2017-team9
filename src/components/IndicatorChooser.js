@@ -1,14 +1,8 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ItemsSelector from './ItemsSelector'
-import dataGetter from '../data/getData'
-//import {ButtonGroup} from 'react-bootstrap'
 
 class IndicatorChooser extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render () {
         
         return (
@@ -20,8 +14,9 @@ class IndicatorChooser extends Component {
                     && this.props.scenarioCollection[0]!=null
                     && this.props.scenarioCollection[0].indicatorCategories!=null
                     && this.props.scenarioCollection[0].indicatorCategories.map(element =>  
-                        <ItemsSelector aSignleIndicatorCategory = {element}
-                                        setIndicatorsSelected = {this.props.setIndicatorsSelected}
+                        <ItemsSelector aSignleIndicatorCategory = { element }
+                                        setIndicatorsSelected = { this.props.setIndicatorsSelected }
+                                        selectedIndicatorCategories = { this.props.selectedIndicatorCategories }
                                         key = {element.id}
                                         id = {element.id}
                                         ></ItemsSelector>
