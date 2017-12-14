@@ -18,8 +18,9 @@ class Graphs extends Component
 			items: [],
 			data: [],
 			form: {
-				scenario: [10],
-				indicator: [131, 123, 133, 125],
+				scenario: [10, 11],
+				indicator: [131, 123, 133, 125, 120],
+				timePeriod: 23,
 			},
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
@@ -43,6 +44,8 @@ class Graphs extends Component
 		let processedtodoTypes = [];
 		const todoTypes = this.state.items[0];
 
+		console.log(todoTypes);
+
 		todoTypes.values.forEach(element =>
 		{
 			let todoIndex = processedtodoTypes.findIndex(todoType => todoType.name === element.value);
@@ -50,7 +53,7 @@ class Graphs extends Component
 			{
 				this.state.form.scenario.forEach(scenario =>
 				{
-					if (element.scenarioId === scenario && element.indicatorId === indicator)
+					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.form.timePeriod )
 					{
 						if (todoIndex === -1)
 						{
@@ -64,40 +67,47 @@ class Graphs extends Component
 				});
 			});// end forEach
 		});//end forEach
+		console.log(processedtodoTypes)
 
 		this.setState({data: processedtodoTypes});
-
-		//console.log(this.state.form);
-		//console.log(processedtodoTypes);
 
 		let final = [{}];
 		let dtArr = [];
 		let inArr = [];
 		let scArr = [];
-		for (let i = 0; i < processedtodoTypes.length; i++)
+		let swaps;
+		for(let i=0; i< processedtodoTypes.length; i++)
 		{
 			dtArr[i] = processedtodoTypes[i].data;
 			inArr[i] = processedtodoTypes[i].inId;
 			scArr[i] = processedtodoTypes[i].scId;
-			for (let j = i; j < processedtodoTypes.length; j++)
+		}
+		for (let i = 0; i < processedtodoTypes.length; i++)
+		{
+			swaps = 0;
+			for (let j = 0; j < processedtodoTypes.length-i; j++)
 			{
-				if (scArr[i] < scArr[j])
+				if (inArr[j] > inArr[j+1])
 				{
-					//Sort scenario
-					let temp = scArr[j];
-					scArr[j] = scArr[i];
-					scArr[i] = temp;
 					//Sort Indicator
-					temp = inArr[j];
-					inArr[j] = inArr[i];
-					inArr[i] = temp;
+					let temp = inArr[j];
+					inArr[j] = inArr[j+1];
+					inArr[j+1] = temp;
+					//Sort scenario
+					temp = scArr[j];
+					scArr[j] = scArr[j + 1];
+					scArr[j + 1] = temp;
 					//Sort Data
 					temp = dtArr[j];
-					dtArr[j] = dtArr[i];
-					dtArr[i] = temp;
+					dtArr[j] = dtArr[j + 1];
+					dtArr[j + 1] = temp;
+					swaps++;
 				}// end if
 			}// end for
-			//console.log(idArr[i] + ' : ' + dtArr[i]);
+			if(swaps === 0)
+			{
+				break;	
+			}// end if
 		}// end for
 
 		let tempI = 0;
@@ -105,25 +115,27 @@ class Graphs extends Component
 		for (let i = 0; i < dtArr.length; i++)
 		{
 			let temp = {}
-			temp.name = inArr[i] + " | " + scArr[i];
+			temp.name = scArr[i];
+			temp.indicator = [];
 			temp.data = [];
 			for (let j = 0; j < inArr.length; j++)
 			{
-				if (temp.name === inArr[j] + " | " + scArr[j])
+				if(scArr[j] === temp.name)
 				{
+					temp.indicator.push(inArr[j]);
 					temp.data.push(dtArr[j]);
-				}//end if
+				}// end if
 			}// end for
 
-			let bool = false;
+			let bool2 = false;
 			for (let j = 0; j < final.length; j++)
 			{
 				if (final[j].name === temp.name)
 				{
-					bool = true;
+					bool2 = true;
 				}// end if
 			}// end for
-			if(!bool)
+			if(!bool2)
 			{
 				final[tempI] = [];
 				final[tempI] = temp;
@@ -144,7 +156,8 @@ class Graphs extends Component
 			{
 				pieHeight += 175;
 			}// end if
-			final[i].center = [22.5 + (250 * (i % numPerRow)) + '%', pieHeight];
+			final[i].center = [22.5 + (25 * (i % numPerRow)) + '%', pieHeight];
+			//console.log(final[i].center);
 			final[i].size = (125 / (numPerRow + 2))*5;
 		}// end for
 
@@ -172,7 +185,7 @@ class Graphs extends Component
 			{
 				polar: this.state.polar,
 				type: this.state.chartType,
-				height: 200 +pieHeight,
+				height: 500 + pieHeight,
 				marginRight: 0,
 				marginLeft: 0,
 				spacingRight: 0,
@@ -193,14 +206,7 @@ class Graphs extends Component
 			xAxis:
 			{
 				tickInterval: 1,
-				min: 0,
-				max: (this.state.form.indicator.length) - 1,
-				labels:
-				{
-					formatter: function () {
-						return this.value + 1;
-					}
-				}
+				categories: final[0].indicator
 			},
 
 			yAxis:
@@ -223,12 +229,14 @@ class Graphs extends Component
 			{
 				series:
 				{
+					showInLegend: false,
 					allowPointSelect: true,
 					pointStart: 0,
 					pointInterval: 1,
 				},// end series
 				column:
 				{
+					showInLegend: false,
 					allowPointSelect: true,
 					pointPadding: 0,
 					borderWidth: 0,
