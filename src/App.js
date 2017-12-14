@@ -33,6 +33,7 @@ class App extends Component {
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
     this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
+    this.setIndicatorDefaults = this.setIndicatorDefaults.bind(this);
   }
 
   setIndicatorsSelected(categoryId, itemId) {
@@ -64,6 +65,10 @@ class App extends Component {
 
     this.setState({selectedIndicatorCategories: tempArray,
                   selectedIndicators: newTempArray});  
+  }
+
+  setIndicatorDefaults(defaults) {
+    console.log("Indicators should have a default value");
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -261,6 +266,7 @@ class App extends Component {
           setIndicatorsSelected = { this.setIndicatorsSelected }
           scenarioCollection = { this.state.scenarioCollection }
           selectedIndicatorCategories = { this.selectedIndicatorCategories }
+          setIndicatorDefaults = {this.setIndicatorDefaults}
           />
           </div>
         )

@@ -17,6 +17,7 @@ class IndicatorChooser extends Component {
                         <ItemsSelector aSignleIndicatorCategory = { element }
                                         setIndicatorsSelected = { this.props.setIndicatorsSelected }
                                         selectedIndicatorCategories = { this.props.selectedIndicatorCategories }
+                                        setIndicatorDefaults = { this.props.setIndicatorDefaults }
                                         key = {element.id}
                                         id = {element.id}
                                         ></ItemsSelector>

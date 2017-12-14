@@ -9,20 +9,22 @@ class ItemsSelector extends Component {
         this.state = {
             id: null,
             name: null,
-            values: []
+            isMandatory: null
         }        
     }
 
     componentDidMount() {
         this.setState({id: this.props.aSignleIndicatorCategory.id, 
-            name: this.props.aSignleIndicatorCategory.name 
+            name: this.props.aSignleIndicatorCategory.name,
+            isMandatory: this.props.aSignleIndicatorCategory.isMandatory 
         });
     }
     
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
             this.setState({id: nextProps.aSignleIndicatorCategory.id, 
-                name: nextProps.aSignleIndicatorCategory.name 
+                name: nextProps.aSignleIndicatorCategory.name,
+                isMandatory: this.props.aSignleIndicatorCategory.isMandatory
             });
         }
     }
@@ -33,6 +35,7 @@ class ItemsSelector extends Component {
     };
 
     render () {
+        //defaultValue = {this.props.aSignleIndicatorCategory.indicators[0].id}
         return (
             <div className ="row" > <br/> <b>{this.state.name}</b>
             <ToggleButtonGroup
@@ -45,7 +48,8 @@ class ItemsSelector extends Component {
             { this.props.aSignleIndicatorCategory.indicators.map(element => 
               <ToggleButton
                 key = { element.id } 
-                value = { element.id }>
+                value = { element.id }
+                >
                 <OverlayTrigger overlay={
                     <Popover id = {element.id} 
                     title = { element.name }>
@@ -53,7 +57,7 @@ class ItemsSelector extends Component {
                     </Popover> }
                     placement = "left" >
                   <div>
-                  {element.name}
+                  { element.name }
                   </div>
                   </OverlayTrigger>
               </ToggleButton>
