@@ -12,7 +12,7 @@ class ContactForm extends Component {
 				subject: '',
 				body: '',
 			},
-			message: '',
+			message: 'mailto:?subject=&body=',
 		};
 		this.changeHandler = this.changeHandler.bind(this);
 		this.submitHandler = this.submitHandler.bind(this);
@@ -28,6 +28,7 @@ class ContactForm extends Component {
 
 	submitHandler(e) {
 		e.preventDefault();
+		console.log(this.state.message)
 		//console.log(this.state.form);
 		fetch('/messages/', {
 			method: 'POST',

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import ContactForm from './components/ContactForm'
 import Menu from './components/OverHeadMenu'
+import Graphs from './components/Graphs'
 import ScenarioSelector from './components/ScenarioSelector'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataGetter from './data/getData'
@@ -54,7 +55,6 @@ class App extends Component {
       element.categoryId !== categoryId );
 
     tempArray = [...tempArray, newArray];
-    
     let newTempArray = [];
     
     tempArray.forEach(element => {
@@ -86,7 +86,7 @@ class App extends Component {
           DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
           .then(result => {
             this.setState({scenarioCollection:result});
-              
+
                     let tempArrayForCategoryIds = [];
                     let tempArrayForIndicators = [];
                     this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
@@ -101,7 +101,6 @@ class App extends Component {
                     let tempArrayForEverything = this.state.selectedIndicatorCategories;
                     let newArray = [];
                     let anotherNewArray = [];
-                    
                     let anotherTempArrayForIndicatorCategories = [];
                     tempArrayForEverything.forEach(element => {
                       if( tempArrayForCategoryIds.includes(element.categoryId) ) {
@@ -202,8 +201,6 @@ class App extends Component {
         //TODO: set to defaults
       }
 
-
-
       return {
        selectedRegion: regionId,
        selectedScenarioCollection,
@@ -257,17 +254,15 @@ class App extends Component {
             selectedScenarios={this.state.selectedScenarios}
             setSelectedTimePeriod={this.setSelectedTimePeriod}
             selectedTimePeriod={this.state.selectedTimePeriod}/>
-            
-            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-              PlaceHolder
-            </div>
-            
+
+		        <Graphs />
+
             <IndicatorChooser
-          setIndicatorsSelected = { this.setIndicatorsSelected }
-          scenarioCollection = { this.state.scenarioCollection }
-          selectedIndicatorCategories = { this.selectedIndicatorCategories }
-          setIndicatorDefaults = {this.setIndicatorDefaults}
-          />
+            setIndicatorsSelected = { this.setIndicatorsSelected }
+            scenarioCollection = { this.state.scenarioCollection }
+            selectedIndicatorCategories = { this.selectedIndicatorCategories }
+            setIndicatorDefaults = {this.setIndicatorDefaults}/>
+          
           </div>
         )
       break;
@@ -296,7 +291,5 @@ class App extends Component {
     );
   }
 }
-
-
 
 export default App;
