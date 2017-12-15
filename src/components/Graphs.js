@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 const ReactHighcharts = require('react-highcharts')
 require('highcharts-more')(ReactHighcharts.Highcharts);
+const ReactHighchartsExport = require('highcharts-exporting');
 
 class Graphs extends Component
 {
@@ -20,6 +21,10 @@ class Graphs extends Component
 			timePeriod: this.props.selectedTimePeriod,
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
+
+		global.Highcharts = require('highcharts');
+		require('highcharts/modules/exporting')(global.Highcharts);
+		global.HighchartsMore = require('highcharts-more');
 
 		this.chart = this.chart.bind(this);
 		this.handleOptionChange = this.handleOptionChange.bind(this);
