@@ -18,51 +18,107 @@ class ItemsSelector extends Component {
             name: this.props.aSignleIndicatorCategory.name,
             isMandatory: this.props.aSignleIndicatorCategory.isMandatory 
         });
+
     }
     
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
             this.setState({id: nextProps.aSignleIndicatorCategory.id, 
                 name: nextProps.aSignleIndicatorCategory.name,
-                isMandatory: this.props.aSignleIndicatorCategory.isMandatory
+                isMandatory: nextProps.aSignleIndicatorCategory.isMandatory
             });
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state !== null
+        ) {
+            
+
+
+            //console.log("componentDidUpdate()", this.props, prevProps, prevState)            
+        }
+
+                /*if ( !this.props.selectedIndicatorCategories.includes(this.state.id) ) {
+            console.log("componenetDidUpdate()")
+                    
+        }*/
+        /*if ( this.state.isMandatory 
+            && !this.props.selectedIndicatorCategories.includes(this.state.id) )*/
+    }
+
     onChange = (value) => {
-        console.log("onChange() called");
-        this.props.setIndicatorsSelected(this.state.id, value);
+        console.log("onChange() called", this.props.selectedIndicators);
+        this.props.setIndicatorsSelected(value);
     };
 
     render () {
-        //defaultValue = {this.props.aSignleIndicatorCategory.indicators[0].id}
+        let content;
+        if ( this.state.isMandatory ) {
+            content = (
+                <div>
+                <ToggleButtonGroup
+                vertical
+                block
+                type="checkbox"
+                value={this.props.selectedIndicators}
+                onChange={this.onChange}
+                defaultValue = {this.props.aSignleIndicatorCategory.indicators[0].id}
+                >
+                { this.props.aSignleIndicatorCategory.indicators.map(element => 
+                  <ToggleButton
+                    key = { element.id } 
+                    value = { element.id }
+                    >
+                    <OverlayTrigger overlay={
+                        <Popover id = {element.id} 
+                        title = { element.name }>
+                        { element.description }
+                        </Popover> }
+                        placement = "left" >
+                      <div>
+                      { element.name }
+                      </div>
+                      </OverlayTrigger>
+                  </ToggleButton>
+                )}
+                </ToggleButtonGroup> 
+                </div>
+            )
+        } else {
+            content = (   
+                <ToggleButtonGroup
+                vertical
+                block
+                type="checkbox"
+                value={this.props.selectedIndicators}
+                onChange={this.onChange}
+                >
+                { this.props.aSignleIndicatorCategory.indicators.map(element => 
+                  <ToggleButton
+                    key = { element.id } 
+                    value = { element.id }
+                    >
+                    <OverlayTrigger overlay={
+                        <Popover id = {element.id} 
+                        title = { element.name }>
+                        { element.description }
+                        </Popover> }
+                        placement = "left" >
+                      <div>
+                      { element.name }
+                      </div>
+                      </OverlayTrigger>
+                  </ToggleButton>
+                )}
+                </ToggleButtonGroup> 
+            ) 
+        }
+        
+        
         return (
             <div className ="row" > <br/> <b>{this.state.name}</b>
-            <ToggleButtonGroup
-            vertical
-            block
-            type="checkbox"
-            value={this.props.selectedIndicatorCategories}
-            onChange={this.onChange}
-            >
-            { this.props.aSignleIndicatorCategory.indicators.map(element => 
-              <ToggleButton
-                key = { element.id } 
-                value = { element.id }
-                >
-                <OverlayTrigger overlay={
-                    <Popover id = {element.id} 
-                    title = { element.name }>
-                    { element.description }
-                    </Popover> }
-                    placement = "left" >
-                  <div>
-                  { element.name }
-                  </div>
-                  </OverlayTrigger>
-              </ToggleButton>
-            )}
-            </ToggleButtonGroup> 
+            {content}
             </div>
         )
     }
