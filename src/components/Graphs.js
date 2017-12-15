@@ -10,16 +10,14 @@ class Graphs extends Component
 
 		this.state =
 		{
-			showNewItemInputs: false,
+			canRenderChart: false,
 			charted: false,
 			chartType: 'column',
 			polar: false,
 			items: this.props.scenarioCollection,
-			form: {
-				scenario: this.props.selectedScenarios,
-				indicator: this.props.selectedIndicators,
-				timePeriod: this.props.selectedTimePeriod,
-			},
+			scenario: this.props.selectedScenarios,
+			indicator: this.props.selectedIndicators,
+			timePeriod: this.props.selectedTimePeriod,
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
 
@@ -28,10 +26,6 @@ class Graphs extends Component
 	}// end constructor
 
 	componentDidMount() {
-			if(this.state.items!=null){
-				this.setState({showNewItemInputs: true });
-				this.chart(null);
-			}
 	}// end componentDidMount()
 
 	componentWillReceiveProps(nextProps){
@@ -45,23 +39,30 @@ class Graphs extends Component
 					scenarios:nextProps.selectedScenarios,
 					timePeriod:nextProps.selectedTimePeriod
 				});
+				if(nextProps.selectedIndicators&&nextProps.selectedIndicators.length>0
+					&&nextProps.selectedScenarios&&nextProps.selectedScenarios.length>0
+					&&nextProps.selectedTimePeriod!=null&&nextProps.scenarioCollection!=null
+				){
+					this.chart(nextProps);
+				}
 			
 		}
 	}
 
-	chart()
+	chart(nextProps)
 	{
 		let processedtodoTypes = [];
-		const todoTypes = this.state.items[0];
+		const todoTypes = nextProps.scenarioCollection[0];
 
+		//preps data from state for graph
 		todoTypes.values.forEach(element =>
 		{
 			let todoIndex = processedtodoTypes.findIndex(todoType => todoType.name === element.value);
-			this.state.form.indicator.forEach(indicator =>
+			nextProps.selectedIndicators.forEach(indicator =>
 			{
-				this.state.form.scenario.forEach(scenario =>
+				nextProps.selectedScenarios.forEach(scenario =>
 				{
-					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.form.timePeriod )
+					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.timePeriod )
 					{
 						if (todoIndex === -1)
 						{
@@ -76,8 +77,6 @@ class Graphs extends Component
 			});// end indicator.forEach
 		});//end forEach
 
-		this.setState({data: processedtodoTypes});
-
 		let final = [{}];
 		let dtArr = [];
 		let inArr = [];
@@ -89,6 +88,8 @@ class Graphs extends Component
 			inArr[i] = processedtodoTypes[i].inId;
 			scArr[i] = processedtodoTypes[i].scId;
 		}// end for
+
+		//Sorts processedtodoTypes by using bublesort
 		for (let i = 0; i < processedtodoTypes.length; i++)
 		{
 			swaps = 0;
@@ -115,8 +116,9 @@ class Graphs extends Component
 			{
 				break;	
 			}// end if
-		}// end for
+		}// end SORTING
 
+		//GETS indicator name based on id
 		todoTypes.indicatorCategories.forEach(inCateg =>
 		{
 			inCateg.indicators.forEach(ind =>
@@ -131,6 +133,7 @@ class Graphs extends Component
 			}); // end indicators.forEach
 		}); // end indicatorCategories.forEach
 
+		//GETS scenario name based on id
 		todoTypes.scenarios.forEach(scen =>
 		{
 			for (let i = 0; i < scArr.length; i++)
@@ -144,6 +147,8 @@ class Graphs extends Component
 
 		let tempI = 0;
 		//console.log(dtArr.length)
+
+		//form series arrays for high chart form given data
 		for (let i = 0; i < dtArr.length; i++)
 		{
 			let temp = {}
@@ -180,39 +185,11 @@ class Graphs extends Component
 		final.pointPlacement = 'between';
 		final.colorByPoint = false;
 
-		/*
-		let pieHeight = 50;
-		const numPerRow = 3;
-		for (let i = 0; i < final.length; i++)
-		{
-			if (i % numPerRow === 0 && i !== 0)
-			{
-				pieHeight += 175;
-			}// end if
-			final[i].center = [22.5 + (25 * (i % numPerRow)) + '%', pieHeight];
-			//console.log(final[i].center);
-			final[i].size = (125 / (numPerRow + 2))*5;
-		}// end for
-		*/
-		
-	/*
-		let tick = 0;
-		if(this.state.form.scenario.lenght > this.state.form.indicator.lenght)
-		{
-			tickmulti = this.state.form.scenario.lenght/this.state.form.indicator.lenght
-		}
-		else if(this.state.form.indicator.lenght > this.state.form.scenario.lenght)
-		{
-			tickmulti = this.state.form.indicator.lenght/this.state.form.scenario.lenght
-		}
-		else
-		{
-			tickmulti = 1
-		}
-	*/
 
 		console.log(final);
-		const config =
+
+		//Creates config file HighCharts
+		let config =
 		{
 			chart:
 			{
@@ -276,8 +253,9 @@ class Graphs extends Component
 			},// end plotOptions
 
 			series: final
-		};// end config
+		};// end CONFIG
 
+		//Does some changes to config if its polar
 		if(this.state.polar)
 		{
 			config.pane =
@@ -287,7 +265,7 @@ class Graphs extends Component
 			}// end pane
 			config.xAxis =
 			{
-				tickInterval: 360 / (this.state.form.indicator.length),
+				tickInterval: 360 / (nextProps.selectedIndicators.length),
 				min: 0,
 				max: 360,
 				labels:
@@ -313,11 +291,11 @@ class Graphs extends Component
 			}// end plotOptions
 		}// end if
 
-		let store = this.state;
-		store.config = config;
-		this.setState(store);
+		this.setState({config:config,
+									canRenderChart:true});
 	}// end chart()
 	
+
 	handleOptionChange(e)
 	{
 		let store = this.state;
@@ -332,13 +310,13 @@ class Graphs extends Component
 			}// end pane
 			store.config.xAxis =
 			{
-				tickInterval: 360 / (store.form.indicator.length),
+				tickInterval: 360 / (store.indicator.length),
 				min: 0,
 				max: 360,
 				labels:
 				{
 					formatter: function () {
-						return store.config.series[0].indicator[(this.value) / (360 / store.form.indicator.length)];
+						return store.config.series[0].indicator[(this.value) / (360 / store.indicator.length)];
 					}// end formatter
 				}// end labels
 			}// end xAxis
@@ -348,7 +326,7 @@ class Graphs extends Component
 				{
 					allowPointSelect: true,
 					pointStart: 0,
-					pointInterval: 360 / (store.form.indicator.length),
+					pointInterval: 360 / (store.indicator.length),
 				}, // end series
 				column:
 				{
@@ -398,9 +376,9 @@ class Graphs extends Component
 
 	render()
 	{
-		if (this.state.showNewItemInputs)
+		if (this.state.canRenderChart)
 		{
-			const { form, config } = this.state;
+			const {config } = this.state;
 			return (
 				<div className="container col-xs-8 col-sm-8 col-md-8 col-lg-8">
 					<div>
@@ -427,7 +405,6 @@ class Graphs extends Component
 								</tbody>
 							</table>
 						</form>
-						<button onClick={(e) => this.chart(e)} value="submit">Submit</button>
 					</div>
 				</div>
 			);// end render
