@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import DataGetter from '../data/getData';
 const ReactHighcharts = require('react-highcharts')
 require('highcharts-more')(ReactHighcharts.Highcharts);
 const ReactHighchartsExport = require('highcharts-exporting');
@@ -12,15 +11,15 @@ class Graphs extends Component
 
 		this.state =
 		{
-			showNewItemInputs: false,
+			canRenderChart: false,
 			charted: false,
 			chartType: 'column',
 			polar: false,
-			items: [],
-			scenario: [10, 11, 12],
-			indicator: [131, 123, 133, 125, 120],
-			timePeriod: 23,
-			config: {chart: {polar: false}, series: [0]} 
+			items: this.props.scenarioCollection,
+			scenario: this.props.selectedScenarios,
+			indicator: this.props.selectedIndicators,
+			timePeriod: this.props.selectedTimePeriod,
+			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
 
 		global.Highcharts = require('highcharts');
@@ -32,25 +31,41 @@ class Graphs extends Component
 	}// end constructor
 
 	componentDidMount() {
-		DataGetter.getScenarioCollectionById(24, 6).then(results =>
-		{
-			this.setState({ items: results, showNewItemInputs: true });
-			this.chart();
-		});// end then
 	}// end componentDidMount()
 
-	chart()
+	componentWillReceiveProps(nextProps){
+		if (this.state.items!==nextProps.scenarioCollection
+			||this.state.indicators!==nextProps.selectedIndicators
+			||this.state.scenarios!==nextProps.selectedScenarios
+			||this.state.timePeriod!==nextProps.selectedTimePeriod) {
+				this.setState({
+					items:nextProps.scenarioCollection,
+					indicators:nextProps.selectedIndicators,
+					scenarios:nextProps.selectedScenarios,
+					timePeriod:nextProps.selectedTimePeriod
+				});
+				if(nextProps.selectedIndicators&&nextProps.selectedIndicators.length>0
+					&&nextProps.selectedScenarios&&nextProps.selectedScenarios.length>0
+					&&nextProps.selectedTimePeriod!=null&&nextProps.scenarioCollection!=null
+				){
+					this.chart(nextProps);
+				}
+			
+		}
+	}
+
+	chart(nextProps)
 	{
 		let processedtodoTypes = [];
-		console.log(this.state.items[0])
-		const todoTypes = this.state.items[0];
+		const todoTypes = nextProps.scenarioCollection[0];
 
+		//preps data from state for graph
 		todoTypes.values.forEach(element =>
 		{
 			let todoIndex = processedtodoTypes.findIndex(todoType => todoType.name === element.value);
-			this.state.indicator.forEach(indicator =>
+			nextProps.selectedIndicators.forEach(indicator =>
 			{
-				this.state.scenario.forEach(scenario =>
+				nextProps.selectedScenarios.forEach(scenario =>
 				{
 					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.timePeriod )
 					{
@@ -67,8 +82,6 @@ class Graphs extends Component
 			});// end indicator.forEach
 		});//end forEach
 
-		this.setState({data: processedtodoTypes});
-
 		let final = [{}];
 		let dtArr = [];
 		let inArr = [];
@@ -80,6 +93,8 @@ class Graphs extends Component
 			inArr[i] = processedtodoTypes[i].inId;
 			scArr[i] = processedtodoTypes[i].scId;
 		}// end for
+
+		//Sorts processedtodoTypes by using bublesort
 		for (let i = 0; i < processedtodoTypes.length; i++)
 		{
 			swaps = 0;
@@ -106,8 +121,9 @@ class Graphs extends Component
 			{
 				break;	
 			}// end if
-		}// end for
+		}// end SORTING
 
+		//GETS indicator name based on id
 		todoTypes.indicatorCategories.forEach(inCateg =>
 		{
 			inCateg.indicators.forEach(ind =>
@@ -122,6 +138,7 @@ class Graphs extends Component
 			}); // end indicators.forEach
 		}); // end indicatorCategories.forEach
 
+		//GETS scenario name based on id
 		todoTypes.scenarios.forEach(scen =>
 		{
 			for (let i = 0; i < scArr.length; i++)
@@ -134,6 +151,9 @@ class Graphs extends Component
 		}); // end scenarios.forEach
 
 		let tempI = 0;
+		//console.log(dtArr.length)
+
+		//form series arrays for high chart form given data
 		for (let i = 0; i < dtArr.length; i++)
 		{
 			let temp = {}
@@ -170,7 +190,11 @@ class Graphs extends Component
 		final.pointPlacement = 'between';
 		final.colorByPoint = false;
 
-		const config =
+
+		console.log(final);
+
+		//Creates config file HighCharts
+		let config =
 		{
 			chart:
 			{
@@ -234,8 +258,9 @@ class Graphs extends Component
 			},// end plotOptions
 
 			series: final
-		};// end config
+		};// end CONFIG
 
+		//Does some changes to config if its polar
 		if(this.state.polar)
 		{
 			config.pane =
@@ -245,7 +270,7 @@ class Graphs extends Component
 			}// end pane
 			config.xAxis =
 			{
-				tickInterval: 360 / (this.state.indicator.length),
+				tickInterval: 360 / (nextProps.selectedIndicators.length),
 				min: 0,
 				max: 360,
 				labels:
@@ -271,11 +296,11 @@ class Graphs extends Component
 			}// end plotOptions
 		}// end if
 
-		let store = this.state;
-		store.config = config;
-		this.setState(store);
+		this.setState({config:config,
+									canRenderChart:true});
 	}// end chart()
 	
+
 	handleOptionChange(e)
 	{
 		let store = this.state;
@@ -356,11 +381,11 @@ class Graphs extends Component
 
 	render()
 	{
-		if (this.state.showNewItemInputs)
+		if (this.state.canRenderChart)
 		{
-			const { config } = this.state;
+			const {config } = this.state;
 			return (
-				<div className="container">
+				<div className="container col-xs-8 col-sm-8 col-md-8 col-lg-8">
 					<div>
 						<ReactHighcharts config={config} />
 					</div>
@@ -375,6 +400,12 @@ class Graphs extends Component
 										<td>
 											<label><input type="radio" value="column" checked={config.chart.polar === false && this.state.chartType === 'column'} onChange={this.handleOptionChange} />Column</label>
 										</td>
+										{
+										/*
+										<td>
+											<label><input type="radio" value="table" checked={config.chart.polar === false && this.state.chartType === 'table'} onChange={this.handleOptionChange} />Table</label>
+										</td>
+										*/}
 									</tr>
 								</tbody>
 							</table>
@@ -385,7 +416,7 @@ class Graphs extends Component
 		}//end if
 		else
 		{
-			return (<div>Retrieving Data</div>);
+			return (<div className="container col-xs-8 col-sm-8 col-md-8 col-lg-8">Retrieving Data</div>);
 		}// end else
 	}// end render
 }// end Graphs
