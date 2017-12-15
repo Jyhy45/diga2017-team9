@@ -21,7 +21,6 @@ class App extends Component {
       scenarioCollection:null,
       selectedScenarios:null,
       selectedTimePeriod:null,
-      selectedIndicatorCategories: [],
       selectedIndicators: []
     }
 
@@ -35,40 +34,6 @@ class App extends Component {
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
     this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
     this.setIndicatorDefaults = this.setIndicatorDefaults.bind(this);
-  }
-
-  setIndicatorsSelected(categoryId, itemId) {
-    /*
-      In this function we create a new array with an object with two values,
-      that we get when button is clicked (categoryId and an array with all enabled itemIds).
-      We check check if pre-existing array with these same objects has same categoryId as
-      our new array.
-      If so, then we filter these values out and merge these two arrays with the new values.
-      Then we go trough all values in the merged array and pick out the itemIds into another new array.
-    */
-    let newArray = {
-      categoryId,
-      itemId
-    }
-
-    let tempArray = this.state.selectedIndicatorCategories.filter(element => 
-      element.categoryId !== categoryId );
-
-    tempArray = [...tempArray, newArray];
-    let newTempArray = [];
-    
-    tempArray.forEach(element => {
-      element.itemId.forEach(secondElement => {
-        newTempArray = [...newTempArray, secondElement];
-      });
-    });
-
-    this.setState({selectedIndicatorCategories: tempArray,
-                  selectedIndicators: newTempArray});  
-  }
-
-  setIndicatorDefaults(defaults) {
-    console.log("Indicators should have a default value");
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -87,47 +52,26 @@ class App extends Component {
           .then(result => {
             this.setState({scenarioCollection:result});
 
-                    let tempArrayForCategoryIds = [];
-                    let tempArrayForIndicators = [];
-                    this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
-                      tempArrayForCategoryIds = [...tempArrayForCategoryIds, element.id];
-                      element.indicators.forEach(secondElement => {
-                        tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
-                      });
-                    });
-              
-                    // Arrays of all possible ids tempArrayForCategoryIds, tempArrayForIndicators.
-              
-                    let tempArrayForEverything = this.state.selectedIndicatorCategories;
-                    let newArray = [];
-                    let anotherNewArray = [];
-                    let anotherTempArrayForIndicatorCategories = [];
-                    tempArrayForEverything.forEach(element => {
-                      if( tempArrayForCategoryIds.includes(element.categoryId) ) {
-                        newArray = [...newArray, element.categoryId];
-                        let tempArrayForIndicatorCategories = {};
-                        tempArrayForIndicatorCategories.categoryId = element.categoryId;
-                      
-                      let thirdTempArray = [];
-                      element.itemId.forEach(secondElement => {
-                        
-                        if ( tempArrayForIndicators.includes(secondElement)) {
-                          anotherNewArray = [...anotherNewArray, secondElement];
-                          thirdTempArray = [...thirdTempArray, secondElement];
-                          
-                        }
-                        tempArrayForIndicatorCategories.itemId = thirdTempArray;
-                        
-                      });
-                      anotherTempArrayForIndicatorCategories = [...anotherTempArrayForIndicatorCategories, tempArrayForIndicatorCategories];
-                      console.log(tempArrayForIndicatorCategories, anotherTempArrayForIndicatorCategories)
-                    }
-                    });
-                    // Below are the arrays with the wanted results.
-                    this.setState({selectedIndicatorCategories: anotherTempArrayForIndicatorCategories,
-                       selectedIndicators: anotherNewArray});
-                  
-            console.log(this.state.selectedIndicators)
+            // set indicator defaults:
+            
+
+            // remove indicators that don't exist in new scenario collection when changing scenario collection
+            let tempArrayForIndicators = [];
+            this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
+              element.indicators.forEach(secondElement => {
+                tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+              });
+            });
+      
+            let tempArrayForSelectedIndicators = this.state.selectedIndicators;
+            let anotherNewArray = [];
+          
+            tempArrayForSelectedIndicators.forEach(secondElement => {
+                if ( tempArrayForIndicators.includes(secondElement)) {
+                  anotherNewArray = [...anotherNewArray, secondElement]; 
+                }
+              });
+            this.setState({ selectedIndicators: anotherNewArray });
           });
         }
       }
@@ -146,6 +90,14 @@ class App extends Component {
     this.setState({
       selectedScenarios: selectedScenariosArray
     });
+  }
+
+  setIndicatorsSelected(itemId) {
+    this.setState({selectedIndicators: itemId})  
+  }
+
+  setIndicatorDefaults() {
+    
   }
 
   saveSelectedScenarioCollection(collectioId){
@@ -200,6 +152,8 @@ class App extends Component {
       } else {
         //TODO: set to defaults
       }
+
+
 
       return {
        selectedRegion: regionId,
@@ -264,11 +218,11 @@ class App extends Component {
               />
 
             <IndicatorChooser
-            setIndicatorsSelected = { this.setIndicatorsSelected }
-            scenarioCollection = { this.state.scenarioCollection }
-            selectedIndicatorCategories = { this.selectedIndicatorCategories }
-            setIndicatorDefaults = {this.setIndicatorDefaults}/>
-          
+          setIndicatorsSelected = { this.setIndicatorsSelected }
+          scenarioCollection = { this.state.scenarioCollection }
+          selectedIndicators = { this.state.selectedIndicators  }
+          setIndicatorDefaults = {this.setIndicatorDefaults}
+          />
           </div>
         )
       break;
@@ -297,5 +251,7 @@ class App extends Component {
     );
   }
 }
+
+
 
 export default App;

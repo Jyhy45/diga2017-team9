@@ -4,9 +4,7 @@ import ItemsSelector from './ItemsSelector'
 
 class IndicatorChooser extends Component {
     render () {
-        
         return (
-
             <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                 <div className="row" >
                 <div> <b>Indicators</b></div>
@@ -16,13 +14,12 @@ class IndicatorChooser extends Component {
                     && this.props.scenarioCollection[0].indicatorCategories.map(element =>  
                         <ItemsSelector aSignleIndicatorCategory = { element }
                                         setIndicatorsSelected = { this.props.setIndicatorsSelected }
-                                        selectedIndicatorCategories = { this.props.selectedIndicatorCategories }
+                                        selectedIndicators = { this.props.selectedIndicators }
                                         setIndicatorDefaults = { this.props.setIndicatorDefaults }
                                         key = {element.id}
                                         id = {element.id}
                                         ></ItemsSelector>
-                    )
-                }
+                    )}
                 </div>
             </div>
         )
