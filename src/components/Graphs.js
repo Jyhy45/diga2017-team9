@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DataGetter from '../data/getData';
 const ReactHighcharts = require('react-highcharts')
 require('highcharts-more')(ReactHighcharts.Highcharts);
+const ReactHighchartsExport = require('highcharts-exporting');
 
 class Graphs extends Component
 {
@@ -16,13 +17,15 @@ class Graphs extends Component
 			chartType: 'column',
 			polar: false,
 			items: [],
-			form: {
-				scenario: [10, 11, 12],
-				indicator: [131, 123, 133, 125, 120],
-				timePeriod: 23,
-			}, // end form
-			config: {chart: {polar: false}, series: [0]}, 
+			scenario: [10, 11, 12],
+			indicator: [131, 123, 133, 125, 120],
+			timePeriod: 23,
+			config: {chart: {polar: false}, series: [0]} 
 		};// end this.state
+
+		global.Highcharts = require('highcharts');
+		require('highcharts/modules/exporting')(global.Highcharts);
+		global.HighchartsMore = require('highcharts-more');
 
 		this.chart = this.chart.bind(this);
 		this.handleOptionChange = this.handleOptionChange.bind(this);
@@ -39,16 +42,17 @@ class Graphs extends Component
 	chart()
 	{
 		let processedtodoTypes = [];
+		console.log(this.state.items[0])
 		const todoTypes = this.state.items[0];
 
 		todoTypes.values.forEach(element =>
 		{
 			let todoIndex = processedtodoTypes.findIndex(todoType => todoType.name === element.value);
-			this.state.form.indicator.forEach(indicator =>
+			this.state.indicator.forEach(indicator =>
 			{
-				this.state.form.scenario.forEach(scenario =>
+				this.state.scenario.forEach(scenario =>
 				{
-					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.form.timePeriod )
+					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.timePeriod )
 					{
 						if (todoIndex === -1)
 						{
@@ -241,7 +245,7 @@ class Graphs extends Component
 			}// end pane
 			config.xAxis =
 			{
-				tickInterval: 360 / (this.state.form.indicator.length),
+				tickInterval: 360 / (this.state.indicator.length),
 				min: 0,
 				max: 360,
 				labels:
@@ -286,13 +290,13 @@ class Graphs extends Component
 			}// end pane
 			store.config.xAxis =
 			{
-				tickInterval: 360 / (store.form.indicator.length),
+				tickInterval: 360 / (store.indicator.length),
 				min: 0,
 				max: 360,
 				labels:
 				{
 					formatter: function () {
-						return store.config.series[0].indicator[(this.value) / (360 / store.form.indicator.length)];
+						return store.config.series[0].indicator[(this.value) / (360 / store.indicator.length)];
 					}// end formatter
 				}// end labels
 			}// end xAxis
@@ -302,7 +306,7 @@ class Graphs extends Component
 				{
 					allowPointSelect: true,
 					pointStart: 0,
-					pointInterval: 360 / (store.form.indicator.length),
+					pointInterval: 360 / (store.indicator.length),
 				}, // end series
 				column:
 				{
@@ -354,7 +358,7 @@ class Graphs extends Component
 	{
 		if (this.state.showNewItemInputs)
 		{
-			const { form, config } = this.state;
+			const { config } = this.state;
 			return (
 				<div className="container">
 					<div>
