@@ -255,7 +255,13 @@ class App extends Component {
             setSelectedTimePeriod={this.setSelectedTimePeriod}
             selectedTimePeriod={this.state.selectedTimePeriod}/>
 
-		        <Graphs />
+            <Graphs
+              selectedIndicators = {this.state.selectedIndicators}
+              selectedScenarios = {this.state.selectedScenarios}
+              scenarioCollection = {this.state.scenarioCollection}
+              selectedTimePeriod = {this.state.selectedTimePeriod}
+               
+              />
 
             <IndicatorChooser
             setIndicatorsSelected = { this.setIndicatorsSelected }

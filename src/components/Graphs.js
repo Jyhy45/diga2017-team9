@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import DataGetter from '../data/getData';
 const ReactHighcharts = require('react-highcharts')
 require('highcharts-more')(ReactHighcharts.Highcharts);
 
@@ -15,12 +14,12 @@ class Graphs extends Component
 			charted: false,
 			chartType: 'column',
 			polar: false,
-			items: [],
+			items: this.props.scenarioCollection,
 			form: {
-				scenario: [10, 11, 12],
-				indicator: [131, 123, 133, 125, 120],
-				timePeriod: 23,
-			}, // end form
+				scenario: this.props.selectedScenarios,
+				indicator: this.props.selectedIndicators,
+				timePeriod: this.props.selectedTimePeriod,
+			},
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
 
@@ -29,12 +28,26 @@ class Graphs extends Component
 	}// end constructor
 
 	componentDidMount() {
-		DataGetter.getScenarioCollectionById(24, 6).then(results =>
-		{
-			this.setState({ items: results, showNewItemInputs: true });
-			this.chart();
-		});// end then
+			if(this.state.items!=null){
+				this.setState({showNewItemInputs: true });
+				this.chart(null);
+			}
 	}// end componentDidMount()
+
+	componentWillReceiveProps(nextProps){
+		if (this.state.items!==nextProps.scenarioCollection
+			||this.state.indicators!==nextProps.selectedIndicators
+			||this.state.scenarios!==nextProps.selectedScenarios
+			||this.state.timePeriod!==nextProps.selectedTimePeriod) {
+				this.setState({
+					items:nextProps.scenarioCollection,
+					indicators:nextProps.selectedIndicators,
+					scenarios:nextProps.selectedScenarios,
+					timePeriod:nextProps.selectedTimePeriod
+				});
+			
+		}
+	}
 
 	chart()
 	{
@@ -130,6 +143,7 @@ class Graphs extends Component
 		}); // end scenarios.forEach
 
 		let tempI = 0;
+		//console.log(dtArr.length)
 		for (let i = 0; i < dtArr.length; i++)
 		{
 			let temp = {}
@@ -166,6 +180,38 @@ class Graphs extends Component
 		final.pointPlacement = 'between';
 		final.colorByPoint = false;
 
+		/*
+		let pieHeight = 50;
+		const numPerRow = 3;
+		for (let i = 0; i < final.length; i++)
+		{
+			if (i % numPerRow === 0 && i !== 0)
+			{
+				pieHeight += 175;
+			}// end if
+			final[i].center = [22.5 + (25 * (i % numPerRow)) + '%', pieHeight];
+			//console.log(final[i].center);
+			final[i].size = (125 / (numPerRow + 2))*5;
+		}// end for
+		*/
+		
+	/*
+		let tick = 0;
+		if(this.state.form.scenario.lenght > this.state.form.indicator.lenght)
+		{
+			tickmulti = this.state.form.scenario.lenght/this.state.form.indicator.lenght
+		}
+		else if(this.state.form.indicator.lenght > this.state.form.scenario.lenght)
+		{
+			tickmulti = this.state.form.indicator.lenght/this.state.form.scenario.lenght
+		}
+		else
+		{
+			tickmulti = 1
+		}
+	*/
+
+		console.log(final);
 		const config =
 		{
 			chart:
@@ -356,7 +402,7 @@ class Graphs extends Component
 		{
 			const { form, config } = this.state;
 			return (
-				<div className="container">
+				<div className="container col-xs-8 col-sm-8 col-md-8 col-lg-8">
 					<div>
 						<ReactHighcharts config={config} />
 					</div>
@@ -371,17 +417,24 @@ class Graphs extends Component
 										<td>
 											<label><input type="radio" value="column" checked={config.chart.polar === false && this.state.chartType === 'column'} onChange={this.handleOptionChange} />Column</label>
 										</td>
+										{
+										/*
+										<td>
+											<label><input type="radio" value="table" checked={config.chart.polar === false && this.state.chartType === 'table'} onChange={this.handleOptionChange} />Table</label>
+										</td>
+										*/}
 									</tr>
 								</tbody>
 							</table>
 						</form>
+						<button onClick={(e) => this.chart(e)} value="submit">Submit</button>
 					</div>
 				</div>
 			);// end render
 		}//end if
 		else
 		{
-			return (<div>Retrieving Data</div>);
+			return (<div className="container col-xs-8 col-sm-8 col-md-8 col-lg-8">Retrieving Data</div>);
 		}// end else
 	}// end render
 }// end Graphs
