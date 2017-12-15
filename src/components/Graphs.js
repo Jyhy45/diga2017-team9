@@ -20,30 +20,26 @@ class Graphs extends Component
 				scenario: [10, 11, 12],
 				indicator: [131, 123, 133, 125, 120],
 				timePeriod: 23,
-			},
+			}, // end form
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
 
-		this.changeHandler = this.changeHandler.bind(this);
 		this.chart = this.chart.bind(this);
 		this.handleOptionChange = this.handleOptionChange.bind(this);
-    		//this.toggleIsDone = this.toggleIsDone.bind(this);
 	}// end constructor
 
 	componentDidMount() {
 		DataGetter.getScenarioCollectionById(24, 6).then(results =>
 		{
 			this.setState({ items: results, showNewItemInputs: true });
-			this.chart(null);
+			this.chart();
 		});// end then
 	}// end componentDidMount()
 
-	chart(e)
+	chart()
 	{
 		let processedtodoTypes = [];
 		const todoTypes = this.state.items[0];
-
-		console.log(todoTypes);
 
 		todoTypes.values.forEach(element =>
 		{
@@ -63,10 +59,9 @@ class Graphs extends Component
 							processedtodoTypes[todoIndex].y++;
 						}// end else
 					}// end if
-				});
-			});// end forEach
+				}); // end scenario.forEach
+			});// end indicator.forEach
 		});//end forEach
-		console.log(processedtodoTypes)
 
 		this.setState({data: processedtodoTypes});
 
@@ -80,7 +75,7 @@ class Graphs extends Component
 			dtArr[i] = processedtodoTypes[i].data;
 			inArr[i] = processedtodoTypes[i].inId;
 			scArr[i] = processedtodoTypes[i].scId;
-		}
+		}// end for
 		for (let i = 0; i < processedtodoTypes.length; i++)
 		{
 			swaps = 0;
@@ -118,20 +113,23 @@ class Graphs extends Component
 					if(ind.id === inArr[i])
 					{
 						inArr[i] = ind.name;
-					}
-				}
-			});
-		});
-		todoTypes.scenarios.forEach(scen => {
-			for (let i = 0; i < scArr.length; i++) {
-				if (scen.id === scArr[i]) {
+					}// end if
+				}// end for
+			}); // end indicators.forEach
+		}); // end indicatorCategories.forEach
+
+		todoTypes.scenarios.forEach(scen =>
+		{
+			for (let i = 0; i < scArr.length; i++)
+			{
+				if (scen.id === scArr[i])
+				{
 					scArr[i] = scen.name;
-				}
-			}
-		});
+				}// end if
+			}// end for
+		}); // end scenarios.forEach
 
 		let tempI = 0;
-		//console.log(dtArr.length)
 		for (let i = 0; i < dtArr.length; i++)
 		{
 			let temp = {}
@@ -168,38 +166,6 @@ class Graphs extends Component
 		final.pointPlacement = 'between';
 		final.colorByPoint = false;
 
-		/*
-		let pieHeight = 50;
-		const numPerRow = 3;
-		for (let i = 0; i < final.length; i++)
-		{
-			if (i % numPerRow === 0 && i !== 0)
-			{
-				pieHeight += 175;
-			}// end if
-			final[i].center = [22.5 + (25 * (i % numPerRow)) + '%', pieHeight];
-			//console.log(final[i].center);
-			final[i].size = (125 / (numPerRow + 2))*5;
-		}// end for
-		*/
-		
-	/*
-		let tick = 0;
-		if(this.state.form.scenario.lenght > this.state.form.indicator.lenght)
-		{
-			tickmulti = this.state.form.scenario.lenght/this.state.form.indicator.lenght
-		}
-		else if(this.state.form.indicator.lenght > this.state.form.scenario.lenght)
-		{
-			tickmulti = this.state.form.indicator.lenght/this.state.form.scenario.lenght
-		}
-		else
-		{
-			tickmulti = 1
-		}
-	*/
-
-		console.log(final);
 		const config =
 		{
 			chart:
@@ -211,30 +177,30 @@ class Graphs extends Component
 				marginLeft: 0,
 				spacingRight: 0,
 				spacingLeft: 0,
-			},
+			}, // end chart
 
 			title:
 			{
 				text: '<b>' + todoTypes.name + '</b> : ' + todoTypes.description
-			},
+			}, // end title
 
 			pane:
 			{
 				startAngle: 0,
 				endAngle: 360
-			},
+			}, // end pane
 
 			xAxis:
 			{
 				tickInterval: 1,
 				categories: final[0].indicator
-			},
+			}, // end xAxis
 
 			yAxis:
 			{
 				min: 0,
 				max: 1
-			},
+			}, // end yAxis
 			
 			tooltip:
 			{
@@ -244,7 +210,7 @@ class Graphs extends Component
 				footerFormat: '</table>',
 				shared: true,
 				useHTML: true
-			},
+			}, // end tooltip
 
 			plotOptions:
 			{
@@ -272,20 +238,19 @@ class Graphs extends Component
 			{
 				startAngle: 0,
 				endAngle: 360
-			}
+			}// end pane
 			config.xAxis =
 			{
 				tickInterval: 360 / (this.state.form.indicator.length),
-				min: 0, //+ (360 / (this.state.form.indicator.length)),
-				max: 360, //+ (360 / (this.state.form.indicator.length)),
+				min: 0,
+				max: 360,
 				labels:
 				{
 					formatter: function () {
-						//console.log((this.value) / (360 / final[0].indicator.length));
 						return final[0].indicator[(this.value) / (360 / final[0].indicator.length)];
-					}
-				}
-			}
+					}// end formatter
+				}// end labels
+			}// end xAxis
 			config.plotOptions =
 			{
 				series:
@@ -293,32 +258,20 @@ class Graphs extends Component
 					allowPointSelect: true,
 					pointStart: 0,
 					pointInterval: 360 / (final[0].indicator.length),
-				},
+				}, // end series
 				column:
 				{
 					pointPadding: 0,
 					groupPadding: 0
-				}
-			}
-		}
-
-		//console.log(config);
+				}// end column
+			}// end plotOptions
+		}// end if
 
 		let store = this.state;
 		store.config = config;
 		this.setState(store);
 	}// end chart()
-	/*
-	changeState(e, polar, type)
-	{
-		let store = this.state;
-		store.config.chart.polar = polar;
-		store.config.chart.type = type;
-		store.polar = polar;
-		store.chartType = type;
-		this.setState(store);
-	}// end changeStare()
-	*/
+	
 	handleOptionChange(e)
 	{
 		let store = this.state;
@@ -330,20 +283,19 @@ class Graphs extends Component
 			{
 				startAngle: 0,
 				endAngle: 360
-			}
+			}// end pane
 			store.config.xAxis =
 			{
 				tickInterval: 360 / (store.form.indicator.length),
-				min: 0, //+ (360 / (this.state.form.indicator.length)),
-				max: 360, //+ (360 / (this.state.form.indicator.length)),
+				min: 0,
+				max: 360,
 				labels:
 				{
 					formatter: function () {
-						//console.log((this.value) / (360 / final[0].indicator.length));
 						return store.config.series[0].indicator[(this.value) / (360 / store.form.indicator.length)];
-					}
-				}
-			}
+					}// end formatter
+				}// end labels
+			}// end xAxis
 			store.config.plotOptions =
 			{
 				series:
@@ -351,21 +303,19 @@ class Graphs extends Component
 					allowPointSelect: true,
 					pointStart: 0,
 					pointInterval: 360 / (store.form.indicator.length),
-				},
+				}, // end series
 				column:
 				{
 					pointPadding: 0,
 					groupPadding: 0
-				}
-			}
-			//console.log(this.state.config);
-			//console.log(store.config)
-		}
+				}// end column
+			}// end plotOptions
+		}// end if
 		else if (e.target.value === 'table')
 		{
 			store.chartType = 'table';
 			store.polar = false;
-		}
+		}// end else if
 		else
 		{
 			store.chartType = e.target.value;
@@ -383,57 +333,22 @@ class Graphs extends Component
 					allowPointSelect: true,
 					pointPadding: 0,
 					borderWidth: 0,
-					//groupPadding: 0
 				},// end column
-			}
-			console.log(store.config.series)
+			}// end plotOptions
 			store.config.xAxis =
 			{
 				categories: (store.config.series[0].indicator),
-			}
+			}// end xAxis
 			store.config.pane =
 			{
 				startAngle: 0,
 				endAngle: 360
-			}
-			//console.log(this.state.config);
-			//console.log(store.config)
-		}
+			}// end pane
+		}// end else
 		store.config.chart.type = store.chartType;
 		store.config.chart.polar = store.polar;
 		this.setState(store);
-	}
-
-	changeHandler(e) {
-		let store = this.state;
-		if (e.target.name === 'indicator')
-		{
-			let arr = (e.target.value).split(",");
-			for(let i = 0; i < arr.length; i++)
-			{
-				//if()
-				arr[i] = parseInt(arr[i], 10);
-			}// end for
-			//console.log(arr);
-			//store.form[e.target.name] = arr;
-		}// end if
-		else
-		{
-			//store.form[e.target.name] = parseInt(e.target.value, 10);
-		}// end else
-		this.setState(store);
-	}// end changeHandler
-	
-	Rows(indicator, data)
-	{
-		console.log(indicator, data)
-		return (
-			<tr>
-				<td>{indicator}</td>
-				<td>{data}</td>
-			</tr>
-		); // end return
-	}
+	}// end handleOptionsChange
 
 	render()
 	{
@@ -443,7 +358,7 @@ class Graphs extends Component
 			return (
 				<div className="container">
 					<div>
-						<ReactHighcharts config={config} />{/*this.chart(this.state.form.scenario, this.state.form.indicator) JSON.stringify(this.state.items[0]) */}
+						<ReactHighcharts config={config} />
 					</div>
 					<div>
 						<form>
@@ -456,17 +371,10 @@ class Graphs extends Component
 										<td>
 											<label><input type="radio" value="column" checked={config.chart.polar === false && this.state.chartType === 'column'} onChange={this.handleOptionChange} />Column</label>
 										</td>
-										{
-										/*
-										<td>
-											<label><input type="radio" value="table" checked={config.chart.polar === false && this.state.chartType === 'table'} onChange={this.handleOptionChange} />Table</label>
-										</td>
-										*/}
 									</tr>
 								</tbody>
 							</table>
 						</form>
-						<button onClick={(e) => this.chart(e)} value="submit">Submit</button>
 					</div>
 				</div>
 			);// end render
