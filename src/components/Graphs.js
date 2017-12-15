@@ -11,14 +11,13 @@ class Graphs extends Component
 
 		this.state =
 		{
-			view: "todos",
 			showNewItemInputs: false,
+			charted: false,
 			chartType: 'column',
 			polar: false,
 			items: [],
-			data: [],
 			form: {
-				scenario: [10, 11],
+				scenario: [10, 11, 12],
 				indicator: [131, 123, 133, 125, 120],
 				timePeriod: 23,
 			},
@@ -31,11 +30,11 @@ class Graphs extends Component
     		//this.toggleIsDone = this.toggleIsDone.bind(this);
 	}// end constructor
 
-
 	componentDidMount() {
 		DataGetter.getScenarioCollectionById(24, 6).then(results =>
 		{
 			this.setState({ items: results, showNewItemInputs: true });
+			this.chart(null);
 		});// end then
 	}// end componentDidMount()
 
@@ -110,6 +109,27 @@ class Graphs extends Component
 			}// end if
 		}// end for
 
+		todoTypes.indicatorCategories.forEach(inCateg =>
+		{
+			inCateg.indicators.forEach(ind =>
+			{
+				for(let i=0; i<inArr.length; i++)
+				{
+					if(ind.id === inArr[i])
+					{
+						inArr[i] = ind.name;
+					}
+				}
+			});
+		});
+		todoTypes.scenarios.forEach(scen => {
+			for (let i = 0; i < scArr.length; i++) {
+				if (scen.id === scArr[i]) {
+					scArr[i] = scen.name;
+				}
+			}
+		});
+
 		let tempI = 0;
 		//console.log(dtArr.length)
 		for (let i = 0; i < dtArr.length; i++)
@@ -127,15 +147,15 @@ class Graphs extends Component
 				}// end if
 			}// end for
 
-			let bool2 = false;
+			let bool = false;
 			for (let j = 0; j < final.length; j++)
 			{
 				if (final[j].name === temp.name)
 				{
-					bool2 = true;
+					bool = true;
 				}// end if
 			}// end for
-			if(!bool2)
+			if(!bool)
 			{
 				final[tempI] = [];
 				final[tempI] = temp;
@@ -148,6 +168,7 @@ class Graphs extends Component
 		final.pointPlacement = 'between';
 		final.colorByPoint = false;
 
+		/*
 		let pieHeight = 50;
 		const numPerRow = 3;
 		for (let i = 0; i < final.length; i++)
@@ -160,7 +181,7 @@ class Graphs extends Component
 			//console.log(final[i].center);
 			final[i].size = (125 / (numPerRow + 2))*5;
 		}// end for
-
+		*/
 		
 	/*
 		let tick = 0;
@@ -185,7 +206,7 @@ class Graphs extends Component
 			{
 				polar: this.state.polar,
 				type: this.state.chartType,
-				height: 500 + pieHeight,
+				height: 500, //+ pieHeight,
 				marginRight: 0,
 				marginLeft: 0,
 				spacingRight: 0,
@@ -229,30 +250,17 @@ class Graphs extends Component
 			{
 				series:
 				{
-					showInLegend: false,
 					allowPointSelect: true,
 					pointStart: 0,
 					pointInterval: 1,
 				},// end series
 				column:
 				{
-					showInLegend: false,
 					allowPointSelect: true,
 					pointPadding: 0,
 					borderWidth: 0,
 					//groupPadding: 0
 				},// end column
-				pie:
-				{
-					allowPointSelect: true,
-					dataLabels:
-					{
-						enabled: false,
-					},// end dataLabels
-					pointPadding: 50,
-					borderWidth: 0,
-					groupPadding: 0,
-				}// end pie
 			},// end plotOptions
 
 			series: final
@@ -268,12 +276,13 @@ class Graphs extends Component
 			config.xAxis =
 			{
 				tickInterval: 360 / (this.state.form.indicator.length),
-				min: 0,
-				max: 360,
+				min: 0, //+ (360 / (this.state.form.indicator.length)),
+				max: 360, //+ (360 / (this.state.form.indicator.length)),
 				labels:
 				{
 					formatter: function () {
-						return this.value;
+						//console.log((this.value) / (360 / final[0].indicator.length));
+						return final[0].indicator[(this.value) / (360 / final[0].indicator.length)];
 					}
 				}
 			}
@@ -283,7 +292,7 @@ class Graphs extends Component
 				{
 					allowPointSelect: true,
 					pointStart: 0,
-					pointInterval: 360 / (this.state.form.indicator.length),
+					pointInterval: 360 / (final[0].indicator.length),
 				},
 				column:
 				{
@@ -312,9 +321,9 @@ class Graphs extends Component
 	*/
 	handleOptionChange(e)
 	{
+		let store = this.state;
 		if(e.target.value === 'polar')
 		{
-			let store = this.state;
 			store.chartType = 'column';
 			store.polar = true;
 			store.config.pane =
@@ -324,13 +333,14 @@ class Graphs extends Component
 			}
 			store.config.xAxis =
 			{
-				tickInterval: 360 / (store.form.indicator.length) ,
-				min: 0,
-				max: 360,
+				tickInterval: 360 / (store.form.indicator.length),
+				min: 0, //+ (360 / (this.state.form.indicator.length)),
+				max: 360, //+ (360 / (this.state.form.indicator.length)),
 				labels:
 				{
 					formatter: function () {
-						return this.value;
+						//console.log((this.value) / (360 / final[0].indicator.length));
+						return store.config.series[0].indicator[(this.value) / (360 / store.form.indicator.length)];
 					}
 				}
 			}
@@ -344,20 +354,20 @@ class Graphs extends Component
 				},
 				column:
 				{
-					allowPointSelect: true,
 					pointPadding: 0,
 					groupPadding: 0
 				}
 			}
-			store.config.chart.type = 'column';
-			store.config.chart.polar = true;
-			this.setState(store);
 			//console.log(this.state.config);
 			//console.log(store.config)
 		}
+		else if (e.target.value === 'table')
+		{
+			store.chartType = 'table';
+			store.polar = false;
+		}
 		else
 		{
-			let store = this.state;
 			store.chartType = e.target.value;
 			store.polar = false;
 			store.config.plotOptions =
@@ -375,41 +385,23 @@ class Graphs extends Component
 					borderWidth: 0,
 					//groupPadding: 0
 				},// end column
-				pie:
-				{
-					allowPointSelect: true,
-					dataLabels:
-					{
-						enabled: false,
-					},// end dataLabels
-					pointPadding: 50,
-					borderWidth: 0,
-					groupPadding: 0,
-				}// end pie
 			}
+			console.log(store.config.series)
 			store.config.xAxis =
 			{
-				tickInterval: 1,
-				min: 0,
-				max: (store.form.indicator.length)-1,
-				labels:
-				{
-					formatter: function () {
-						return this.value + 1;
-					}
-				}
+				categories: (store.config.series[0].indicator),
 			}
 			store.config.pane =
 			{
 				startAngle: 0,
 				endAngle: 360
 			}
-			store.config.chart.type = e.target.value;
-			store.config.chart.polar = false;
-			this.setState(store);
 			//console.log(this.state.config);
 			//console.log(store.config)
 		}
+		store.config.chart.type = store.chartType;
+		store.config.chart.polar = store.polar;
+		this.setState(store);
 	}
 
 	changeHandler(e) {
@@ -430,53 +422,46 @@ class Graphs extends Component
 			//store.form[e.target.name] = parseInt(e.target.value, 10);
 		}// end else
 		this.setState(store);
+	}// end changeHandler
+	
+	Rows(indicator, data)
+	{
+		console.log(indicator, data)
+		return (
+			<tr>
+				<td>{indicator}</td>
+				<td>{data}</td>
+			</tr>
+		); // end return
 	}
 
 	render()
 	{
 		if (this.state.showNewItemInputs)
 		{
-			const { form } = this.state;
-			if (this.state.config === { chart: { polar: false } })
-			{
-				this.chart(null)
-			}
+			const { form, config } = this.state;
 			return (
 				<div className="container">
 					<div>
-						<ReactHighcharts config={this.state.config} />{/*this.chart(this.state.form.scenario, this.state.form.indicator) JSON.stringify(this.state.items[0]) */}
-					</div >
+						<ReactHighcharts config={config} />{/*this.chart(this.state.form.scenario, this.state.form.indicator) JSON.stringify(this.state.items[0]) */}
+					</div>
 					<div>
 						<form>
 							<table className="container">
 								<tbody className="container">
-									{/*
 									<tr>
 										<td>
-											<label htmlFor="scenario" >Scenario</label>
+											<label><input type="radio" value="polar" checked={config.chart.polar === true && this.state.chartType === 'column'} onChange={this.handleOptionChange} />Polar</label>
 										</td>
 										<td>
-											<input type="text" name="scenario" value={form.scenario} onChange={e => this.changeHandler(e)} placeholder="Scenario ID here" />
+											<label><input type="radio" value="column" checked={config.chart.polar === false && this.state.chartType === 'column'} onChange={this.handleOptionChange} />Column</label>
 										</td>
-									</tr>
-									<tr>
+										{
+										/*
 										<td>
-											<label htmlFor="indicator" >Indicator</label>
+											<label><input type="radio" value="table" checked={config.chart.polar === false && this.state.chartType === 'table'} onChange={this.handleOptionChange} />Table</label>
 										</td>
-										<td>
-											<input type="text" name="indicator" value={form.indicator} onChange={e => this.changeHandler(e)} placeholder="Indicator ID here" />
-										</td>
-									</tr>
-									*/}
-									<tr>
-										<td colSpan="2">
-											{
-												//onClick={(e) => this.changeState(e, false, 'column')}
-											}
-											<label><input type="radio" value="polar" checked={this.state.config.chart.polar === true && this.state.chartType === 'column'} onChange={this.handleOptionChange}/>Polar</label>
-											<label><input type="radio" value="column" checked={this.state.config.chart.polar === false && this.state.chartType === 'column'} onChange={this.handleOptionChange}/>Column</label>
-											<label><input type="radio" value="pie" checked={this.state.config.chart.polar === false && this.state.chartType === 'pie'} onChange={this.handleOptionChange}/> Pie</label>
-										</td>
+										*/}
 									</tr>
 								</tbody>
 							</table>
