@@ -302,13 +302,13 @@ class Graphs extends Component
 			}// end pane
 			store.config.xAxis =
 			{
-				tickInterval: 360 / (store.indicator.length),
+				tickInterval : 360 / (this.props.selectedIndicators.length),
 				min: 0,
 				max: 360,
 				labels:
 				{
-					formatter: function () {
-						return store.config.series[0].indicator[(this.value) / (360 / store.indicator.length)];
+					formatter: () => {
+					return store.config.series[0].indicator[(this.value) / (360 / this.props.selectedIndicators.length)];
 					}// end formatter
 				}// end labels
 			}// end xAxis
@@ -318,7 +318,7 @@ class Graphs extends Component
 				{
 					allowPointSelect: true,
 					pointStart: 0,
-					pointInterval: 360 / (store.indicator.length),
+					pointInterval : 360 / (this.props.selectedIndicators.length)
 				}, // end series
 				column:
 				{
