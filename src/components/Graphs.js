@@ -15,10 +15,6 @@ class Graphs extends Component
 			charted: false,
 			chartType: 'column',
 			polar: false,
-			items: this.props.scenarioCollection,
-			scenario: this.props.selectedScenarios,
-			indicator: this.props.selectedIndicators,
-			timePeriod: this.props.selectedTimePeriod,
 			config: {chart: {polar: false}, series: [0]}, 
 		};// end this.state
 
@@ -34,24 +30,15 @@ class Graphs extends Component
 	}// end componentDidMount()
 
 	componentWillReceiveProps(nextProps){
-		if (this.state.items!==nextProps.scenarioCollection
-			||this.state.indicators!==nextProps.selectedIndicators
-			||this.state.scenarios!==nextProps.selectedScenarios
-			||this.state.timePeriod!==nextProps.selectedTimePeriod) {
-				this.setState({
-					items:nextProps.scenarioCollection,
-					indicators:nextProps.selectedIndicators,
-					scenarios:nextProps.selectedScenarios,
-					timePeriod:nextProps.selectedTimePeriod
-				});
-				if(nextProps.selectedIndicators&&nextProps.selectedIndicators.length>0
-					&&nextProps.selectedScenarios&&nextProps.selectedScenarios.length>0
-					&&nextProps.selectedTimePeriod!=null&&nextProps.scenarioCollection!=null
-				){
-					this.chart(nextProps);
-				}
+		
+		if(nextProps.selectedIndicators&&nextProps.selectedIndicators.length>0
+			&&nextProps.selectedScenarios&&nextProps.selectedScenarios.length>0
+			&&nextProps.selectedTimePeriod!=null&&nextProps.scenarioCollection!=null
+			){
+				this.chart(nextProps);
+			}
 			
-		}
+		
 	}
 
 	chart(nextProps)
@@ -59,7 +46,7 @@ class Graphs extends Component
 		let processedtodoTypes = [];
 		const todoTypes = nextProps.scenarioCollection[0];
 
-		//preps data from state for graph
+		//preps data for config
 		todoTypes.values.forEach(element =>
 		{
 			let todoIndex = processedtodoTypes.findIndex(todoType => todoType.name === element.value);
@@ -67,7 +54,7 @@ class Graphs extends Component
 			{
 				nextProps.selectedScenarios.forEach(scenario =>
 				{
-					if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === this.state.timePeriod )
+		if (element.scenarioId === scenario && element.indicatorId === indicator && element.timePeriodId === nextProps.selectedTimePeriod)
 					{
 						if (todoIndex === -1)
 						{
