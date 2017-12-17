@@ -11,16 +11,16 @@ import IndicatorChooser from './components/IndicatorChooser'
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state ={
+    this.state = {
       selectedTab: "Landing_Page",
       selectedRegionLevel: null,
       selectedRegion: null,
-      regionLevel:null,
-      regions:null,
-      selectedScenarioCollection:null,
-      scenarioCollection:null,
-      selectedScenarios:null,
-      selectedTimePeriod:null,
+      regionLevel: null,
+      regions: null,
+      selectedScenarioCollection: null,
+      scenarioCollection: null,
+      selectedScenarios: null,
+      selectedTimePeriod: null,
       selectedIndicators: []
     }
 
@@ -33,7 +33,6 @@ class App extends Component {
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
     this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
-    this.setIndicatorDefaults = this.setIndicatorDefaults.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState)
@@ -52,26 +51,36 @@ class App extends Component {
           .then(result => {
             this.setState({scenarioCollection:result});
 
-            // set indicator defaults:
-            
-
-            // remove indicators that don't exist in new scenario collection when changing scenario collection
-            let tempArrayForIndicators = [];
-            this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
-              element.indicators.forEach(secondElement => {
-                tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+              // remove indicators that don't exist in new scenario collection when changing scenario collection:
+              let tempArrayForIndicators = [];
+              this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
+                element.indicators.forEach(secondElement => {
+                  tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+                });
               });
-            });
-      
-            let tempArrayForSelectedIndicators = this.state.selectedIndicators;
-            let anotherNewArray = [];
-          
-            tempArrayForSelectedIndicators.forEach(secondElement => {
-                if ( tempArrayForIndicators.includes(secondElement)) {
-                  anotherNewArray = [...anotherNewArray, secondElement]; 
+
+              let anotherNewArray = [];
+              this.state.selectedIndicators.forEach(indicator => {
+                if ( tempArrayForIndicators.includes(indicator)) {
+                  anotherNewArray = [...anotherNewArray, indicator]; 
                 }
               });
-            this.setState({ selectedIndicators: anotherNewArray });
+              this.setState({ selectedIndicators: anotherNewArray });
+
+              // set indicator defaults:
+              this.state.scenarioCollection[0].indicatorCategories.forEach(category => {
+                if ( category.isMandatory ) {
+                  let tempArray = [];
+                  category.indicators.forEach(indicator => {
+                    if (this.state.selectedIndicators.includes(indicator.id)) {
+                      tempArray = [...tempArray, indicator.id];
+                    }  
+                  });
+                  if ( tempArray.length == 0 ) {
+                    this.setState({selectedIndicators: [...this.state.selectedIndicators, category.indicators[0].id]});
+                  }
+                }
+              });
           });
         }
       }
@@ -93,11 +102,8 @@ class App extends Component {
   }
 
   setIndicatorsSelected(itemId) {
+    console.log("setting indicators")
     this.setState({selectedIndicators: itemId})  
-  }
-
-  setIndicatorDefaults() {
-    
   }
 
   saveSelectedScenarioCollection(collectioId){
@@ -213,16 +219,14 @@ class App extends Component {
               selectedIndicators = {this.state.selectedIndicators}
               selectedScenarios = {this.state.selectedScenarios}
               scenarioCollection = {this.state.scenarioCollection}
-              selectedTimePeriod = {this.state.selectedTimePeriod}
-               
+              selectedTimePeriod = {this.state.selectedTimePeriod}               
               />
 
             <IndicatorChooser
-          setIndicatorsSelected = { this.setIndicatorsSelected }
-          scenarioCollection = { this.state.scenarioCollection }
-          selectedIndicators = { this.state.selectedIndicators  }
-          setIndicatorDefaults = {this.setIndicatorDefaults}
-          />
+              setIndicatorsSelected = { this.setIndicatorsSelected }
+              scenarioCollection = { this.state.scenarioCollection }
+              selectedIndicators = { this.state.selectedIndicators }
+            />
           </div>
         )
       break;
@@ -251,7 +255,5 @@ class App extends Component {
     );
   }
 }
-
-
 
 export default App;
