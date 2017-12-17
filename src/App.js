@@ -11,16 +11,16 @@ import IndicatorChooser from './components/IndicatorChooser'
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state ={
+    this.state = {
       selectedTab: "Landing_Page",
       selectedRegionLevel: null,
       selectedRegion: null,
-      regionLevel:null,
-      regions:null,
-      selectedScenarioCollection:null,
-      scenarioCollection:null,
-      selectedScenarios:null,
-      selectedTimePeriod:null,
+      regionLevel: null,
+      regions: null,
+      selectedScenarioCollection: null,
+      scenarioCollection: null,
+      selectedScenarios: null,
+      selectedTimePeriod: null,
       selectedIndicators: []
     }
 
@@ -219,15 +219,14 @@ class App extends Component {
               selectedIndicators = {this.state.selectedIndicators}
               selectedScenarios = {this.state.selectedScenarios}
               scenarioCollection = {this.state.scenarioCollection}
-              selectedTimePeriod = {this.state.selectedTimePeriod}
-               
+              selectedTimePeriod = {this.state.selectedTimePeriod}               
               />
 
             <IndicatorChooser
-          setIndicatorsSelected = { this.setIndicatorsSelected }
-          scenarioCollection = { this.state.scenarioCollection }
-          selectedIndicators = { this.state.selectedIndicators }
-          />
+              setIndicatorsSelected = { this.setIndicatorsSelected }
+              scenarioCollection = { this.state.scenarioCollection }
+              selectedIndicators = { this.state.selectedIndicators }
+            />
           </div>
         )
       break;

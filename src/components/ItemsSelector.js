@@ -28,7 +28,7 @@ class ItemsSelector extends Component {
             });
         }
     }
-
+    
     onChange = (value) => {
         this.props.setIndicatorsSelected(value);
     };
