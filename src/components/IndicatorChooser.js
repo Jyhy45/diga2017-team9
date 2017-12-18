@@ -16,8 +16,8 @@ class IndicatorChooser extends Component {
                                         setIndicatorsSelected = { this.props.setIndicatorsSelected }
                                         selectedIndicators = { this.props.selectedIndicators }
                                         setIndicatorDefaults = { this.props.setIndicatorDefaults }
-                                        key = {element.id}
-                                        id = {element.id}
+                                        key = { element.id }
+                                        id = { element.id }
                                         ></ItemsSelector>
                     )}
                 </div>
