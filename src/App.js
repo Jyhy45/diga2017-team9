@@ -37,6 +37,29 @@ class App extends Component {
 
   componentWillUpdate(nextProps, nextState)
   {
+    console.log("@componentWillUpdate");
+    
+    //setting default for regio level
+    if (nextState.selectedRegionLevel == null && nextState.regionLevel != null && nextState.regionLevel.length > 0){
+      this.setState({selectedRegionLevel: nextState.regionLevel[0].id});
+    }
+
+    //setting default for region
+    if (nextState.selectedRegion == null && nextState.regions != null && nextState.regions.length > 0) {
+      this.setState({selectedRegion: nextState.regions[0].id});
+    }
+
+    //setting default for scenarioCollection
+    if (nextState.selectedScenarioCollection == null && nextState.regions != null && nextState.regions.length >0 ){
+      const indexOfRegion = nextState.regions.findIndex( element => element.id === nextState.selectedRegion )
+      if(indexOfRegion>=0)
+      {
+        this.setState({ selectedScenarioCollection: nextState.regions[indexOfRegion].scenarioCollections[0].id});
+      }
+
+    }
+
+
     //logic for fetching scenariocollection ... regionid and colletionid must be known
     if (nextState !== this.state){
       if (nextState.selectedRegionLevel!==this.state.selectedRegionLevel) {
@@ -88,7 +111,9 @@ class App extends Component {
   }
 
   componentDidMount(){
-    DataGetter.getRegionLevels().then(result => {this.setState({regionLevel:result});})
+
+    //initial datarequest and setting initial defaults
+    DataGetter.getRegionLevels().then(result => {this.setState({regionLevel:result});}).then()
   }
 
   setSelectedTimePeriod(selectedTimePeriod){
