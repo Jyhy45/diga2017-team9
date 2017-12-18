@@ -59,6 +59,22 @@ class App extends Component {
 
     }
 
+    //setting default for timePeriod
+    if (nextState.selectedTimePeriod == null 
+      && nextState.scenarioCollection != null 
+      && nextState.scenarioCollection.length > 0){
+      this.setState({ selectedTimePeriod: nextState.scenarioCollection[0].timePeriods[0].id});
+    }
+
+    //setting default for selected scenarios
+    if (nextState.selectedScenarios==null||nextState.selectedScenarios.length===0) {
+      if (nextState.scenarioCollection != null
+        && nextState.scenarioCollection.length > 0) {
+        this.setState({selectedScenarios: [nextState.scenarioCollection[0].scenarios[0].id]});
+      
+      }
+      
+    }
 
     //logic for fetching scenariocollection ... regionid and colletionid must be known
     if (nextState !== this.state){
