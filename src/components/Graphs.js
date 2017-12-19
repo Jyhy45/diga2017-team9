@@ -223,7 +223,6 @@ class Graphs extends Component
 				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
 				'<td style="padding:0"><b>{point.y}</b></td></tr>',
 				footerFormat: '</table>',
-				shared: true,
 				useHTML: true
 			}, // end tooltip
 
@@ -240,6 +239,9 @@ class Graphs extends Component
 					allowPointSelect: true,
 					pointPadding: 0,
 					borderWidth: 0,
+					dataLabels: {
+						enabled: true
+					}
 					//groupPadding: 0
 				},// end column
 			},// end plotOptions
@@ -278,7 +280,7 @@ class Graphs extends Component
 				column:
 				{
 					pointPadding: 0,
-					groupPadding: 0
+					groupPadding: 0,
 				}// end column
 			}// end plotOptions
 		}// end if
@@ -318,12 +320,12 @@ class Graphs extends Component
 				{
 					allowPointSelect: true,
 					pointStart: 0,
-					pointInterval : 360 / (this.props.selectedIndicators.length)
+					pointInterval: 360 / (this.props.selectedIndicators.length),
 				}, // end series
 				column:
 				{
 					pointPadding: 0,
-					groupPadding: 0
+					groupPadding: 0,
 				}// end column
 			}// end plotOptions
 		}// end if
@@ -349,6 +351,9 @@ class Graphs extends Component
 					allowPointSelect: true,
 					pointPadding: 0,
 					borderWidth: 0,
+					dataLabels: {
+						enabled: true
+					}
 				},// end column
 			}// end plotOptions
 			store.config.xAxis =

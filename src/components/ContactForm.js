@@ -28,16 +28,15 @@ class ContactForm extends Component {
 
 	submitHandler(e) {
 		e.preventDefault();
-		console.log(this.state.message)
+		//console.log(this.state.message)
 		//console.log(this.state.form);
 		fetch('/messages/', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(this.state.form)
-		})
-			.catch((error) => {
-				console.error(error);
-			});
+		}).catch((error) => {
+			console.error(error);
+		});
 	}
 
 	render() {
