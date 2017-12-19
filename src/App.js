@@ -33,12 +33,72 @@ class App extends Component {
     this.setSelectedScenarios = this.setSelectedScenarios.bind(this);
     this.setSelectedTimePeriod = this.setSelectedTimePeriod.bind(this);
     this.setIndicatorsSelected = this.setIndicatorsSelected.bind(this);
+    this.setDefaultsIfNeeded = this.setDefaultsIfNeeded.bind(this);
+    this.getDataIfNeeded = this.getDataIfNeeded.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState)
   {
     console.log("@componentWillUpdate");
+    this.setDefaultsIfNeeded(nextState);
     
+     if (nextState !== this.state){
+      this.getDataIfNeeded(nextState);  
+    }
+  }
+
+  getDataIfNeeded(nextState){
+    //gets data for regions from api
+    if (nextState.selectedRegionLevel!==this.state.selectedRegionLevel) {
+      DataGetter.getRegionLevelById(nextState.selectedRegionLevel).then(result =>{
+        this.setState({regions: result});
+      })
+    }
+
+    if (nextState.selectedScenarioCollection!=null) {
+      if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection
+          || this.state.selectedRegion!==nextState.selectedRegion) {
+        DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
+        .then(result => {
+          this.setState({scenarioCollection:result});
+
+            // remove indicators that don't exist in new scenario collection when changing scenario collection:
+            let tempArrayForIndicators = [];
+            this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
+              element.indicators.forEach(secondElement => {
+                tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+              });
+            });
+
+            let anotherNewArray = [];
+            this.state.selectedIndicators.forEach(indicator => {
+              if ( tempArrayForIndicators.includes(indicator)) {
+                anotherNewArray = [...anotherNewArray, indicator]; 
+              }
+            });
+            this.setState({ selectedIndicators: anotherNewArray });
+
+            // set indicator defaults:
+            this.state.scenarioCollection[0].indicatorCategories.forEach(category => {
+              if ( category.isMandatory ) {
+                let tempArray = [];
+                category.indicators.forEach(indicator => {
+                  if (this.state.selectedIndicators.includes(indicator.id)) {
+                    tempArray = [...tempArray, indicator.id];
+                  }  
+                });
+                if ( tempArray.length == 0 ) {
+                  this.setState({selectedIndicators: [...this.state.selectedIndicators, category.indicators[0].id]});
+                }
+              }
+            });
+        });
+      }
+    }
+
+  }
+
+  setDefaultsIfNeeded(nextState){
     //setting default for regio level
     if (nextState.selectedRegionLevel == null && nextState.regionLevel != null && nextState.regionLevel.length > 0){
       this.setState({selectedRegionLevel: nextState.regionLevel[0].id});
@@ -56,7 +116,6 @@ class App extends Component {
       {
         this.setState({ selectedScenarioCollection: nextState.regions[indexOfRegion].scenarioCollections[0].id});
       }
-
     }
 
     //setting default for timePeriod
@@ -71,65 +130,15 @@ class App extends Component {
       if (nextState.scenarioCollection != null
         && nextState.scenarioCollection.length > 0) {
         this.setState({selectedScenarios: [nextState.scenarioCollection[0].scenarios[0].id]});
-      
-      }
-      
-    }
-
-    //logic for fetching scenariocollection ... regionid and colletionid must be known
-    if (nextState !== this.state){
-      if (nextState.selectedRegionLevel!==this.state.selectedRegionLevel) {
-        DataGetter.getRegionLevelById(nextState.selectedRegionLevel).then(result =>{
-          this.setState({regions: result});
-        })
-      }
-      if (nextState.selectedScenarioCollection!=null) {
-        if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection
-            || this.state.selectedRegion!==nextState.selectedRegion) {
-          DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
-          .then(result => {
-            this.setState({scenarioCollection:result});
-
-              // remove indicators that don't exist in new scenario collection when changing scenario collection:
-              let tempArrayForIndicators = [];
-              this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
-                element.indicators.forEach(secondElement => {
-                  tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
-                });
-              });
-
-              let anotherNewArray = [];
-              this.state.selectedIndicators.forEach(indicator => {
-                if ( tempArrayForIndicators.includes(indicator)) {
-                  anotherNewArray = [...anotherNewArray, indicator]; 
-                }
-              });
-              this.setState({ selectedIndicators: anotherNewArray });
-
-              // set indicator defaults:
-              this.state.scenarioCollection[0].indicatorCategories.forEach(category => {
-                if ( category.isMandatory ) {
-                  let tempArray = [];
-                  category.indicators.forEach(indicator => {
-                    if (this.state.selectedIndicators.includes(indicator.id)) {
-                      tempArray = [...tempArray, indicator.id];
-                    }  
-                  });
-                  if ( tempArray.length == 0 ) {
-                    this.setState({selectedIndicators: [...this.state.selectedIndicators, category.indicators[0].id]});
-                  }
-                }
-              });
-          });
-        }
       }
     }
+
+
   }
 
   componentDidMount(){
-
-    //initial datarequest and setting initial defaults
-    DataGetter.getRegionLevels().then(result => {this.setState({regionLevel:result});}).then()
+    //initial datarequest
+    DataGetter.getRegionLevels().then(result => {this.setState({regionLevel:result});})
   }
 
   setSelectedTimePeriod(selectedTimePeriod){
