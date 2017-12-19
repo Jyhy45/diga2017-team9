@@ -7,6 +7,7 @@ import ScenarioSelector from './components/ScenarioSelector'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataGetter from './data/getData'
 import IndicatorChooser from './components/IndicatorChooser'
+import { Alert } from 'react-bootstrap';
 
 class App extends Component {
   constructor(props) {
@@ -50,53 +51,60 @@ class App extends Component {
   getDataIfNeeded(nextState){
     //gets data for regions from api
     if (nextState.selectedRegionLevel!==this.state.selectedRegionLevel) {
-      DataGetter.getRegionLevelById(nextState.selectedRegionLevel).then(result =>{
-        this.setState({regions: result});
-      })
-    }
-
-    //get scenario collection from api and handle indicators
-    if (nextState.selectedScenarioCollection!=null) {
-      if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection
-          || this.state.selectedRegion!==nextState.selectedRegion) {
-        DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
-        .then(result => {
-          this.setState({scenarioCollection:result});
-
-            // remove indicators that don't exist in new scenario collection when changing scenario collection:
-            let tempArrayForIndicators = [];
-            this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
-              element.indicators.forEach(secondElement => {
-                tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
-              });
-            });
-
-            let anotherNewArray = [];
-            this.state.selectedIndicators.forEach(indicator => {
-              if ( tempArrayForIndicators.includes(indicator)) {
-                anotherNewArray = [...anotherNewArray, indicator]; 
-              }
-            });
-            this.setState({ selectedIndicators: anotherNewArray });
-
-            // set indicator defaults:
-            this.state.scenarioCollection[0].indicatorCategories.forEach(category => {
-              if ( category.isMandatory ) {
-                let tempArray = [];
-                category.indicators.forEach(indicator => {
-                  if (this.state.selectedIndicators.includes(indicator.id)) {
-                    tempArray = [...tempArray, indicator.id];
-                  }  
-                });
-                if ( tempArray.length == 0 ) {
-                  this.setState({selectedIndicators: [...this.state.selectedIndicators, category.indicators[0].id]});
-                }
-              }
-            });
-        });
+      if (nextState.selectedRegionLevel!=null) {
+        DataGetter.getRegionLevelById(nextState.selectedRegionLevel).then(result =>{
+          this.setState({regions: result});
+        }) 
+      } else {
+        this.setState({regions: null});
       }
     }
 
+    //get scenario collection from api and handle indicators
+    if (nextState.selectedScenarioCollection!==this.state.selectedScenarioCollection||
+      this.state.selectedRegion!==nextState.selectedRegion) 
+      {
+      if (nextState.selectedScenarioCollection!=null) {
+         
+          DataGetter.getScenarioCollectionById(nextState.selectedRegion,nextState.selectedScenarioCollection)
+          .then(result => {
+            this.setState({scenarioCollection:result});
+  
+              // remove indicators that don't exist in new scenario collection when changing scenario collection:
+              let tempArrayForIndicators = [];
+              this.state.scenarioCollection[0].indicatorCategories.forEach(element => {
+                element.indicators.forEach(secondElement => {
+                  tempArrayForIndicators = [...tempArrayForIndicators, secondElement.id];  
+                });
+              });
+  
+              let anotherNewArray = [];
+              this.state.selectedIndicators.forEach(indicator => {
+                if ( tempArrayForIndicators.includes(indicator)) {
+                  anotherNewArray = [...anotherNewArray, indicator]; 
+                }
+              });
+              this.setState({ selectedIndicators: anotherNewArray });
+  
+              // set indicator defaults:
+              this.state.scenarioCollection[0].indicatorCategories.forEach(category => {
+                if ( category.isMandatory ) {
+                  let tempArray = [];
+                  category.indicators.forEach(indicator => {
+                    if (this.state.selectedIndicators.includes(indicator.id)) {
+                      tempArray = [...tempArray, indicator.id];
+                    }  
+                  });
+                  if ( tempArray.length == 0 ) {
+                    this.setState({selectedIndicators: [...this.state.selectedIndicators, category.indicators[0].id]});
+                  }
+                }
+              });
+          }).catch(error=>{
+            alert("No Data was found for your Region ScenarioCollection compiantion");
+          });
+        }
+    } 
   }
 
   setDefaultsIfNeeded(nextState){
@@ -205,7 +213,7 @@ class App extends Component {
       if (selectedScenarioCollection!=null) {
         selectedTimePeriod=state.selectedTimePeriod;
         selectedScenarios=state.selectedScenarios;
-        scenarioCollection=state.scenarioCollection;
+        //scenarioCollection=state.scenarioCollection;
       } 
       return {
        selectedRegion: regionId,
