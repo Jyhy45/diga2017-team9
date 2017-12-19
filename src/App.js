@@ -55,6 +55,7 @@ class App extends Component {
       })
     }
 
+    //get scenario collection from api and handle indicators
     if (nextState.selectedScenarioCollection!=null) {
       if (this.state.selectedScenarioCollection!==nextState.selectedScenarioCollection
           || this.state.selectedRegion!==nextState.selectedRegion) {
@@ -205,12 +206,7 @@ class App extends Component {
         selectedTimePeriod=state.selectedTimePeriod;
         selectedScenarios=state.selectedScenarios;
         scenarioCollection=state.scenarioCollection;
-      } else {
-        //TODO: set to defaults
-      }
-
-
-
+      } 
       return {
        selectedRegion: regionId,
        selectedScenarioCollection,
